@@ -1,0 +1,2590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCore Pro — Monalisa Tech Solutions</title>
+<style>
+:root{
+  --primary:#1a6faa;--primary-dark:#134f7a;--primary-light:#e8f4fd;
+  --teal:#0d9488;--teal-light:#e6f7f5;
+  --success:#16a34a;--success-light:#dcfce7;
+  --warning:#d97706;--warning-light:#fef3c7;
+  --danger:#dc2626;--danger-light:#fee2e2;
+  --purple:#7c3aed;--purple-light:#ede9fe;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;
+  --gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--gray-900:#0f172a;
+  --white:#fff;
+  --sidebar-w:240px;--header-h:60px;
+  --radius:8px;--radius-lg:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+  --t:.18s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.5;overflow-x:hidden}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input,select,textarea{font-family:inherit;font-size:1rem}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:4px}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0d2a45 0%,#1a6faa 50%,#0d9488 100%);display:flex;align-items:center;justify-content:center;z-index:1000;transition:opacity .4s ease}
+.login-card{background:var(--white);border-radius:16px;padding:40px 36px;width:400px;max-width:94vw;box-shadow:0 25px 60px rgba(0,0,0,.3)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .icon{font-size:2.8rem}
+.login-logo h1{font-size:1.5rem;font-weight:800;color:var(--gray-900);margin-top:6px}
+.login-logo p{font-size:.82rem;color:var(--gray-500);margin-top:2px}
+.login-tabs{display:flex;gap:4px;background:var(--gray-100);border-radius:8px;padding:4px;margin-bottom:20px}
+.login-tab{flex:1;padding:7px;border-radius:6px;border:none;background:transparent;font-size:.8rem;color:var(--gray-500);font-weight:500;transition:var(--t)}
+.login-tab.active{background:var(--white);color:var(--primary);box-shadow:var(--shadow)}
+.demo-creds{background:var(--primary-light);border:1px solid #bce0f7;border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:.78rem;color:var(--primary-dark)}
+.demo-creds strong{display:block;margin-bottom:3px}
+.form-group{margin-bottom:13px}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--gray-600);margin-bottom:4px}
+.form-control{width:100%;padding:10px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-size:.88rem;transition:var(--t);background:var(--gray-50);color:var(--gray-800)}
+.form-control:focus{outline:none;border-color:var(--primary);background:var(--white);box-shadow:0 0 0 3px rgba(26,111,170,.12)}
+.login-footer{text-align:center;margin-top:18px;font-size:.73rem;color:var(--gray-400)}
+.login-footer a{color:var(--primary);font-weight:600}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius);font-size:.85rem;font-weight:600;transition:var(--t);border:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{background:#15803d}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:#0f766e}
+.btn-purple{background:var(--purple);color:#fff}.btn-purple:hover{background:#6d28d9}
+.btn-warning{background:var(--warning);color:#fff}.btn-warning:hover{background:#b45309}
+.btn-outline{background:transparent;border:1.5px solid var(--gray-300);color:var(--gray-700)}.btn-outline:hover{background:var(--gray-100);border-color:var(--gray-400)}
+.btn-ghost{background:transparent;color:var(--gray-600);padding:6px 10px}.btn-ghost:hover{background:var(--gray-100)}
+.btn-sm{padding:5px 11px;font-size:.78rem}
+.btn-xs{padding:3px 8px;font-size:.74rem}
+.btn-block{width:100%;justify-content:center;margin-top:4px}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── APP SHELL ── */
+#app{display:none;height:100vh;overflow:hidden}
+#app.visible{display:flex;flex-direction:column}
+
+/* Header */
+.app-header{height:var(--header-h);background:var(--white);border-bottom:1px solid var(--gray-200);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200;box-shadow:var(--shadow)}
+.menu-toggle{display:none;background:none;border:none;padding:6px;border-radius:6px;cursor:pointer;color:var(--gray-600);font-size:1.2rem;align-items:center;justify-content:center}
+.header-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1rem;color:var(--primary);white-space:nowrap;min-width:0}
+.header-brand .logo-icon{font-size:1.4rem;flex-shrink:0}
+.header-search{flex:1;max-width:420px;position:relative}
+.header-search input{width:100%;padding:7px 12px 7px 36px;border:1.5px solid var(--gray-200);border-radius:20px;font-size:.84rem;background:var(--gray-50);transition:var(--t)}
+.header-search input:focus{outline:none;border-color:var(--primary);background:var(--white);box-shadow:0 0 0 3px rgba(26,111,170,.1)}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none}
+.search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow-lg);max-height:340px;overflow-y:auto;z-index:300;display:none}
+.search-results.open{display:block}
+.search-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--gray-100);font-size:.83rem;display:flex;align-items:center;gap:10px}
+.search-item:hover{background:var(--primary-light)}
+.search-item:last-child{border-bottom:none}
+.search-tag{font-size:.7rem;background:var(--gray-100);color:var(--gray-500);padding:2px 7px;border-radius:10px;flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+
+/* Offline indicator */
+.sync-status{display:flex;align-items:center;gap:5px;font-size:.73rem;padding:4px 9px;border-radius:12px;font-weight:600;transition:var(--t)}
+.sync-status.online{background:var(--success-light);color:var(--success)}
+.sync-status.offline{background:var(--danger-light);color:var(--danger)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+.notif-btn{position:relative;background:none;border:none;cursor:pointer;padding:6px;border-radius:6px;color:var(--gray-600);font-size:1.2rem;transition:var(--t)}
+.notif-btn:hover{background:var(--gray-100)}
+.notif-badge{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;font-size:.6rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;display:none}
+.branch-selector{padding:5px 10px;border:1.5px solid var(--gray-200);border-radius:6px;font-size:.78rem;background:var(--white);color:var(--gray-700);font-weight:600;cursor:pointer;max-width:160px}
+.user-menu-wrap{position:relative}
+.user-avatar{width:33px;height:33px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;cursor:pointer;flex-shrink:0}
+.user-dropdown{position:absolute;right:0;top:calc(100%+8px);background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:200px;z-index:400;display:none}
+.user-dropdown.open{display:block}
+.user-dd-header{padding:12px 14px;border-bottom:1px solid var(--gray-100)}
+.user-dd-name{font-weight:700;font-size:.85rem;color:var(--gray-900)}
+.user-dd-role{font-size:.75rem;color:var(--gray-400);margin-top:1px}
+.user-dd-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:.83rem;cursor:pointer;color:var(--gray-700)}
+.user-dd-item:hover{background:var(--gray-50)}
+.user-dd-item.danger{color:var(--danger)}
+
+/* Notification panel */
+.notif-wrap{position:relative}
+.notif-panel{position:absolute;right:0;top:calc(100%+8px);width:340px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:400;display:none;max-height:420px;overflow:hidden;display:flex;flex-direction:column}
+.notif-panel.open{display:flex}
+.notif-panel-hdr{padding:12px 16px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.notif-list{overflow-y:auto;flex:1}
+.notif-item{padding:11px 16px;border-bottom:1px solid var(--gray-100);font-size:.82rem;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:var(--t)}
+.notif-item:hover{background:var(--gray-50)}
+.notif-item.unread{background:var(--primary-light)}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* Sidebar */
+.sidebar{width:var(--sidebar-w);background:var(--gray-900);color:var(--gray-300);position:fixed;top:var(--header-h);bottom:0;left:0;overflow-y:auto;z-index:150;transition:transform var(--t);display:flex;flex-direction:column}
+.sidebar-section{padding:14px 10px 4px}
+.sidebar-label{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-500);padding:0 8px;margin-bottom:3px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;font-size:.83rem;font-weight:500;transition:var(--t);color:var(--gray-400);margin-bottom:1px;position:relative}
+.nav-item:hover{background:rgba(255,255,255,.07);color:var(--gray-200)}
+.nav-item.active{background:var(--primary);color:#fff}
+.nav-item.hidden{display:none}
+.nav-icon{font-size:.95rem;width:18px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:.62rem;padding:1px 6px;border-radius:10px;font-weight:700}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0}
+
+/* Main */
+.main-content{margin-left:var(--sidebar-w);margin-top:var(--header-h);overflow-y:auto;height:calc(100vh - var(--header-h));padding:20px}
+#sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;display:none}
+#sidebar-overlay.show{display:block}
+
+/* Page header */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-title{font-size:1.22rem;font-weight:800;color:var(--gray-900)}
+.page-subtitle{font-size:.78rem;color:var(--gray-500);margin-top:2px}
+.page-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+
+/* Cards */
+.card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);box-shadow:var(--shadow)}
+.card-header{padding:13px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card-title{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.card-body{padding:16px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:13px;margin-bottom:18px}
+.stat-card{background:var(--white);border-radius:var(--radius-lg);padding:14px 16px;border:1px solid var(--gray-200);box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;transition:var(--t)}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.stat-icon.blue{background:var(--primary-light)}.stat-icon.teal{background:var(--teal-light)}.stat-icon.green{background:var(--success-light)}.stat-icon.amber{background:var(--warning-light)}.stat-icon.red{background:var(--danger-light)}.stat-icon.purple{background:var(--purple-light)}
+.stat-value{font-size:1.55rem;font-weight:800;color:var(--gray-900);line-height:1}
+.stat-label{font-size:.73rem;color:var(--gray-500);margin-top:3px;font-weight:500}
+.stat-change{font-size:.7rem;margin-top:3px;font-weight:600}
+.stat-change.up{color:var(--success)}.stat-change.dn{color:var(--danger)}
+
+/* Tables */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap::after{content:'';display:block}
+table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:500px}
+thead th{padding:10px 13px;text-align:left;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gray-500);background:var(--gray-50);border-bottom:1px solid var(--gray-200);white-space:nowrap}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--gray-100);color:var(--gray-700);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(248,250,252,.8)}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap}
+.badge-success{background:var(--success-light);color:var(--success)}
+.badge-warning{background:var(--warning-light);color:var(--warning)}
+.badge-danger{background:var(--danger-light);color:var(--danger)}
+.badge-primary{background:var(--primary-light);color:var(--primary)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+.badge-gray{background:var(--gray-100);color:var(--gray-600)}
+
+/* Grids */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.grid-12{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.grid-21{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+
+/* Panel tabs */
+.panel-tabs{display:flex;border-bottom:1px solid var(--gray-200);background:var(--gray-50);overflow-x:auto}
+.panel-tab{padding:10px 15px;font-size:.81rem;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;transition:var(--t);white-space:nowrap;flex-shrink:0}
+.panel-tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--white)}
+.panel-tab:hover:not(.active){color:var(--gray-700);background:var(--gray-100)}
+.panel-body{padding:16px}
+
+/* Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--white);border-radius:var(--radius-lg);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);transform:scale(.95) translateY(10px);transition:transform .2s ease}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-lg{max-width:760px}.modal-xl{max-width:900px}
+.modal-header{padding:15px 18px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1}
+.modal-title{font-size:.98rem;font-weight:700;color:var(--gray-900)}
+.modal-close{background:none;border:none;font-size:1.3rem;color:var(--gray-400);cursor:pointer;padding:2px 7px;border-radius:4px;line-height:1}
+.modal-close:hover{color:var(--gray-700);background:var(--gray-100)}
+.modal-body{padding:18px}
+.modal-footer{padding:13px 18px;border-top:1px solid var(--gray-200);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:var(--white)}
+
+/* Toast */
+#toast-container{position:fixed;top:70px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none;max-width:360px;width:calc(100vw - 32px)}
+.toast{background:var(--white);border-radius:8px;padding:11px 14px;box-shadow:var(--shadow-lg);display:flex;align-items:flex-start;gap:10px;border-left:4px solid var(--primary);animation:slideIn .3s ease;pointer-events:auto;font-size:.83rem}
+.toast.success{border-color:var(--success)}.toast.error{border-color:var(--danger)}.toast.warning{border-color:var(--warning)}
+.toast-icon{font-size:.95rem;margin-top:1px;flex-shrink:0}
+.toast-content{flex:1;min-width:0}
+.toast-title{font-weight:700;color:var(--gray-900);font-size:.82rem}
+.toast-msg{color:var(--gray-600);font-size:.77rem;margin-top:1px}
+.toast-actions{display:flex;gap:6px;margin-top:6px}
+.toast-undo{font-size:.75rem;color:var(--primary);font-weight:700;background:none;border:none;cursor:pointer;padding:0;text-decoration:underline}
+.toast-close{background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:.95rem;padding:0;flex-shrink:0}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Forms */
+.form-row{display:grid;gap:11px;margin-bottom:11px}
+.form-row.cols-2{grid-template-columns:1fr 1fr}.form-row.cols-3{grid-template-columns:1fr 1fr 1fr}.form-row.cols-4{grid-template-columns:1fr 1fr 1fr 1fr}
+.form-label{font-size:.76rem;font-weight:600;color:var(--gray-600);display:block;margin-bottom:3px}
+.form-input{width:100%;padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-size:.86rem;transition:var(--t);background:var(--white);color:var(--gray-800)}
+.form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,111,170,.1)}
+.form-input.error{border-color:var(--danger)}
+.form-select{width:100%;padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-size:.86rem;background:var(--white);color:var(--gray-800);cursor:pointer}
+.form-select:focus{outline:none;border-color:var(--primary)}
+.form-textarea{width:100%;padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-size:.86rem;resize:vertical;min-height:78px;transition:var(--t)}
+.form-textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,111,170,.1)}
+.form-hint{font-size:.73rem;color:var(--gray-400);margin-top:2px}
+.field-error{font-size:.74rem;color:var(--danger);margin-top:2px;display:none}
+.field-error.show{display:block}
+
+/* Alerts */
+.alert{padding:10px 13px;border-radius:var(--radius);font-size:.83rem;display:flex;align-items:flex-start;gap:9px;margin-bottom:11px}
+.alert-info{background:var(--primary-light);border:1px solid #bce0f7;color:var(--primary-dark)}
+.alert-success{background:var(--success-light);border:1px solid #a7f3c0;color:#15803d}
+.alert-warning{background:var(--warning-light);border:1px solid #fde68a;color:#92400e}
+.alert-danger{background:var(--danger-light);border:1px solid #fca5a5;color:#991b1b}
+
+/* Views */
+.view{display:none}.view.active{display:block}
+
+/* Progress */
+.progress{background:var(--gray-100);border-radius:4px;height:6px;overflow:hidden}
+.progress-bar{height:100%;border-radius:4px;background:var(--primary);transition:width .5s ease}
+.progress-bar.success{background:var(--success)}.progress-bar.warning{background:var(--warning)}.progress-bar.danger{background:var(--danger)}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:11px;padding:7px 0}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px}
+.tl-dot.success{background:var(--success)}.tl-dot.warning{background:var(--warning)}.tl-dot.danger{background:var(--danger)}.tl-dot.teal{background:var(--teal)}
+.tl-content{flex:1;padding-bottom:9px}
+.tl-title{font-size:.83rem;font-weight:600;color:var(--gray-800)}
+.tl-desc{font-size:.77rem;color:var(--gray-500);margin-top:1px}
+.tl-time{font-size:.7rem;color:var(--gray-400);margin-top:2px}
+
+/* Patient vitals */
+.vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+.vital-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:10px;text-align:center}
+.vital-label{font-size:.68rem;color:var(--gray-500);font-weight:600;text-transform:uppercase}
+.vital-value{font-size:1.15rem;font-weight:800;color:var(--gray-900);margin-top:2px}
+.vital-unit{font-size:.68rem;color:var(--gray-400)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:36px 20px}
+.empty-icon{font-size:2.4rem;opacity:.3;margin-bottom:10px}
+.empty-state h3{font-size:.93rem;font-weight:600;color:var(--gray-600);margin-bottom:5px}
+.empty-state p{font-size:.8rem;color:var(--gray-400)}
+
+/* SVG Charts */
+.chart-container{position:relative;width:100%}
+.chart-svg{width:100%;overflow:visible}
+.chart-tooltip{position:absolute;background:var(--gray-900);color:#fff;font-size:.75rem;padding:5px 9px;border-radius:5px;pointer-events:none;white-space:nowrap;z-index:100;display:none;box-shadow:var(--shadow-md)}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.77rem}
+.legend-item{display:flex;align-items:center;gap:5px;color:var(--gray-600)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Chatbot */
+#chatbot-toggle{position:fixed;bottom:24px;right:24px;width:54px;height:54px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.45rem;cursor:pointer;box-shadow:0 4px 16px rgba(26,111,170,.4);z-index:800;transition:var(--t);display:flex;align-items:center;justify-content:center}
+#chatbot-toggle:hover{background:var(--primary-dark);transform:scale(1.08)}
+.chat-unread-dot{position:absolute;top:2px;right:2px;width:12px;height:12px;background:var(--danger);border-radius:50%;border:2px solid var(--white);display:none}
+#chatbot-panel{position:fixed;bottom:88px;right:24px;width:365px;height:530px;background:var(--white);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.18);z-index:800;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--gray-200);transform:scale(.9) translateY(20px);opacity:0;pointer-events:none;transition:all .25s ease}
+#chatbot-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
+.chatbot-header{padding:13px 15px;background:linear-gradient(135deg,var(--primary),var(--teal));color:#fff;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.chatbot-avatar{width:35px;height:35px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
+.chatbot-title{font-weight:700;font-size:.9rem}
+.chatbot-subtitle{font-size:.7rem;opacity:.8;margin-top:1px}
+.chatbot-close{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:#fff;width:27px;height:27px;border-radius:50%;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+.chatbot-messages{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px;background:var(--gray-50)}
+.chat-msg{max-width:88%}
+.chat-msg.bot{align-self:flex-start}.chat-msg.user{align-self:flex-end}
+.chat-bubble{padding:9px 12px;border-radius:12px;font-size:.83rem;line-height:1.45}
+.chat-msg.bot .chat-bubble{background:var(--white);border:1px solid var(--gray-200);color:var(--gray-800);border-bottom-left-radius:3px;box-shadow:var(--shadow)}
+.chat-msg.user .chat-bubble{background:var(--primary);color:#fff;border-bottom-right-radius:3px}
+.chat-time{font-size:.67rem;color:var(--gray-400);margin-top:2px}
+.chat-msg.user .chat-time{text-align:right}
+.chat-suggests{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.chat-sug{padding:4px 9px;border-radius:12px;border:1.5px solid var(--primary);color:var(--primary);font-size:.73rem;background:var(--white);cursor:pointer;transition:var(--t)}
+.chat-sug:hover{background:var(--primary);color:#fff}
+.chatbot-input-area{padding:10px;border-top:1px solid var(--gray-200);background:var(--white);display:flex;gap:7px;flex-shrink:0}
+.chatbot-input{flex:1;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:18px;font-size:.83rem;transition:var(--t)}
+.chatbot-input:focus{outline:none;border-color:var(--primary)}
+.chatbot-send{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem}
+.chat-typing{display:flex;gap:4px;align-items:center;padding:10px 13px}
+.chat-typing span{width:7px;height:7px;border-radius:50%;background:var(--gray-400);animation:bounce .9s infinite}
+.chat-typing span:nth-child(2){animation-delay:.15s}
+.chat-typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* WhatsApp */
+#wa-btn{position:fixed;bottom:24px;left:24px;width:50px;height:50px;border-radius:50%;background:#25d366;color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 16px rgba(37,211,102,.4);z-index:800;display:flex;align-items:center;justify-content:center;transition:var(--t);text-decoration:none}
+#wa-btn:hover{transform:scale(1.08);background:#1db954}
+
+/* Print invoice */
+@media print{
+  #login-screen,#app .app-header,.sidebar,.sidebar-footer,#chatbot-toggle,#chatbot-panel,#wa-btn,#toast-container,.page-actions,.btn,nav{display:none!important}
+  .main-content{margin:0!important;padding:0!important}
+  .print-invoice{display:block!important}
+  body{background:#fff!important}
+}
+.print-invoice{display:none}
+.invoice-paper{max-width:680px;margin:0 auto;font-family:Georgia,serif}
+.invoice-paper .inv-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--primary);padding-bottom:16px;margin-bottom:16px}
+.invoice-paper .inv-title{font-size:2rem;font-weight:800;color:var(--primary)}
+.invoice-paper .inv-table{width:100%;border-collapse:collapse;margin:16px 0}
+.invoice-paper .inv-table th{background:var(--primary);color:#fff;padding:8px 10px;text-align:left;font-size:.82rem}
+.invoice-paper .inv-table td{padding:8px 10px;border-bottom:1px solid var(--gray-200);font-size:.85rem}
+.invoice-paper .inv-total{text-align:right;font-size:1.1rem;font-weight:700;margin-top:10px}
+
+/* Email modal */
+.email-compose{display:flex;flex-direction:column;gap:11px}
+.email-inbox{display:flex;flex-direction:column;gap:0}
+.email-item{padding:12px 14px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:var(--t)}
+.email-item:hover{background:var(--gray-50)}
+.email-item.unread{background:var(--primary-light);font-weight:600}
+.email-from{font-size:.83rem;color:var(--gray-800);font-weight:600}
+.email-subject{font-size:.8rem;color:var(--gray-600)}
+.email-time{font-size:.72rem;color:var(--gray-400)}
+
+/* Role access chip */
+.role-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:10px;font-size:.7rem;font-weight:700}
+.role-doctor{background:#eff6ff;color:#1d4ed8}
+.role-nurse{background:#f0fdf4;color:#15803d}
+.role-pharmacist{background:#fdf4ff;color:#7e22ce}
+.role-admin{background:#fff7ed;color:#c2410c}
+.role-lab{background:#f0fdfa;color:#0f766e}
+.role-patient{background:#f8fafc;color:#475569}
+
+/* Responsive */
+@media(max-width:960px){
+  :root{--sidebar-w:0px}
+  .sidebar{transform:translateX(-240px);width:240px}
+  .sidebar.open{transform:translateX(0)}
+  .menu-toggle{display:flex}
+  .main-content{margin-left:0}
+  .grid-2,.grid-3,.grid-4,.grid-12,.grid-21{grid-template-columns:1fr}
+  .form-row.cols-2,.form-row.cols-3,.form-row.cols-4{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .vitals-grid{grid-template-columns:repeat(2,1fr)}
+  .sync-status span.label{display:none}
+  .branch-selector{max-width:120px;font-size:.72rem}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  #chatbot-panel{width:calc(100vw - 24px);right:12px;height:480px}
+  .modal{max-height:96vh}
+  .page-header{flex-direction:column}
+  .header-brand .brand-text{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo"><div class="icon">🏥</div><h1>MediCore Pro</h1><p>Unified Healthcare Management Platform</p></div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('staff')">Staff Login</button>
+      <button class="login-tab" onclick="switchLoginTab('patient')">Patient Portal</button>
+      <button class="login-tab" onclick="switchLoginTab('admin')">Admin</button>
+    </div>
+    <div id="ltab-staff">
+      <div class="demo-creds"><strong>Demo accounts</strong>admin/admin123 · doctor/doc123 · nurse/nurse123 · pharmacist/pharm123</div>
+      <div class="form-group"><label>Username</label><input class="form-control" id="l-user" value="admin" placeholder="Username"></div>
+      <div class="form-group"><label>Password</label><input class="form-control" id="l-pass" type="password" value="admin123" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="form-group"><label>Branch</label><select class="form-control" id="l-branch"><option>Main Hospital — Kampala</option><option>Nakawa Clinic</option><option>Entebbe Branch</option></select></div>
+      <div id="login-err" style="color:var(--danger);font-size:.8rem;margin-bottom:8px;display:none"></div>
+      <button class="btn btn-primary btn-block" onclick="doLogin()">Sign In →</button>
+    </div>
+    <div id="ltab-patient" style="display:none">
+      <div class="demo-creds"><strong>Patient portal</strong> Use your patient ID (e.g. P001) and date of birth.</div>
+      <div class="form-group"><label>Patient ID</label><input class="form-control" id="pt-id" placeholder="e.g. P001"></div>
+      <div class="form-group"><label>Date of Birth</label><input class="form-control" type="date" id="pt-dob"></div>
+      <button class="btn btn-teal btn-block" onclick="doPatientLogin()">Access My Records →</button>
+    </div>
+    <div id="ltab-admin" style="display:none">
+      <div class="demo-creds"><strong>Admin console</strong> superadmin / superadmin123</div>
+      <div class="form-group"><label>Admin Username</label><input class="form-control" id="ad-user" value="superadmin" placeholder="Username"></div>
+      <div class="form-group"><label>Password</label><input class="form-control" id="ad-pass" value="superadmin123" type="password" onkeydown="if(event.key==='Enter')doAdminLogin()"></div>
+      <button class="btn btn-primary btn-block" onclick="doAdminLogin()">Admin Login →</button>
+    </div>
+    <div class="login-footer">Powered by <a href="mailto:kabuusumonalisa@gmail.com">Monalisa Tech Solutions</a> · kabuusumonalisa@gmail.com · WhatsApp +256703953711</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <header class="app-header">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="header-brand">
+      <span class="logo-icon">🏥</span>
+      <span class="brand-text">MediCore Pro</span>
+    </div>
+    <div class="header-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search patients, medicines, staff…" id="global-search" autocomplete="off"
+        oninput="globalSearch(this.value)"
+        onfocus="if(this.value.length>1)document.getElementById('search-results').classList.add('open')"
+        onblur="setTimeout(()=>document.getElementById('search-results').classList.remove('open'),220)">
+      <div class="search-results" id="search-results"></div>
+    </div>
+    <div class="header-actions">
+      <div class="sync-status online" id="sync-status" title="Connection status">
+        <div class="sync-dot"></div>
+        <span class="label">Online</span>
+      </div>
+      <select class="branch-selector" id="branch-select" onchange="switchBranch(this.value)">
+        <option value="0">🏥 Main Hospital</option>
+        <option value="1">🏪 Nakawa Clinic</option>
+        <option value="2">🏥 Entebbe Branch</option>
+      </select>
+      <div class="notif-wrap">
+        <button class="notif-btn" onclick="toggleNotifPanel()" id="notif-btn">🔔<span class="notif-badge" id="notif-count"></span></button>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-panel-hdr">
+            <span style="font-weight:700;font-size:.87rem">Notifications</span>
+            <button class="btn btn-ghost btn-xs" onclick="markAllRead()">Mark all read</button>
+          </div>
+          <div class="notif-list" id="notif-list"></div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('modal-email')" style="font-size:1rem;padding:6px 9px">✉️</button>
+      <div class="user-menu-wrap">
+        <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">A</div>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="user-dd-header">
+            <div class="user-dd-name" id="dd-user-name">Admin</div>
+            <div class="user-dd-role" id="dd-user-role">System Administrator</div>
+          </div>
+          <div class="user-dd-item" onclick="navigate('settings');closeUserMenu()">⚙️ Settings</div>
+          <div class="user-dd-item" onclick="navigate('support');closeUserMenu()">💬 Support</div>
+          <div class="user-dd-item" onclick="openModal('modal-email');closeUserMenu()">✉️ Email</div>
+          <div class="user-dd-item danger" onclick="doLogout()">🚪 Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="nav-item active" onclick="nav('dashboard')" data-view="dashboard" data-roles="all"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="nav('analytics')" data-view="analytics" data-roles="admin,doctor"><span class="nav-icon">📈</span> Analytics</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Hospital</div>
+      <div class="nav-item" onclick="nav('patients')" data-view="patients" data-roles="all"><span class="nav-icon">👤</span> Patients</div>
+      <div class="nav-item" onclick="nav('appointments')" data-view="appointments" data-roles="all"><span class="nav-icon">📅</span> Appointments <span class="nav-badge" id="appt-badge">0</span></div>
+      <div class="nav-item" onclick="nav('consultations')" data-view="consultations" data-roles="admin,doctor"><span class="nav-icon">🩺</span> Consultations</div>
+      <div class="nav-item" onclick="nav('lab')" data-view="lab" data-roles="admin,doctor,lab"><span class="nav-icon">🧪</span> Laboratory</div>
+      <div class="nav-item" onclick="nav('nursing')" data-view="nursing" data-roles="admin,nurse,doctor"><span class="nav-icon">💉</span> Nursing Logs</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Pharmacy</div>
+      <div class="nav-item" onclick="nav('pharmacy')" data-view="pharmacy" data-roles="admin,pharmacist,doctor"><span class="nav-icon">💊</span> Inventory</div>
+      <div class="nav-item" onclick="nav('prescriptions')" data-view="prescriptions" data-roles="admin,doctor,pharmacist"><span class="nav-icon">📋</span> Prescriptions</div>
+      <div class="nav-item" onclick="nav('dispensing')" data-view="dispensing" data-roles="admin,pharmacist"><span class="nav-icon">🏷️</span> Dispensing</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Finance & ERP</div>
+      <div class="nav-item" onclick="nav('billing')" data-view="billing" data-roles="admin,doctor"><span class="nav-icon">💳</span> Billing</div>
+      <div class="nav-item" onclick="nav('staff')" data-view="staff" data-roles="admin"><span class="nav-icon">👥</span> Staff</div>
+      <div class="nav-item" onclick="nav('branches')" data-view="branches" data-roles="admin"><span class="nav-icon">🏢</span> Branches</div>
+      <div class="nav-item" onclick="nav('reports')" data-view="reports" data-roles="admin,doctor"><span class="nav-icon">📑</span> Reports</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">System</div>
+      <div class="nav-item" onclick="nav('audit')" data-view="audit" data-roles="admin"><span class="nav-icon">🔒</span> Audit Log</div>
+      <div class="nav-item" onclick="nav('settings')" data-view="settings" data-roles="all"><span class="nav-icon">⚙️</span> Settings</div>
+      <div class="nav-item" onclick="nav('support')" data-view="support" data-roles="all"><span class="nav-icon">💬</span> Support</div>
+    </div>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="user-avatar" style="width:30px;height:30px;font-size:.74rem" id="sb-avatar">A</div>
+        <div>
+          <div style="color:var(--gray-200);font-weight:600;font-size:.8rem" id="sb-name">Admin</div>
+          <div style="color:var(--gray-500);font-size:.7rem" id="sb-role">System Administrator</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content" id="main-content">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-header">
+        <div><div class="page-title">Dashboard</div><div class="page-subtitle" id="dash-sub">Loading…</div></div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="refreshDashboard()">↺ Refresh</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-patient')">+ New Patient</button>
+        </div>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="grid-21" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Revenue Trend (7 days)</span><span class="badge badge-success" id="dash-rev-badge">This week</span></div>
+          <div class="card-body">
+            <div class="chart-container" style="height:160px"><canvas id="chart-revenue" style="width:100%;height:160px"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Activity Feed</span></div>
+          <div class="card-body" style="max-height:220px;overflow-y:auto;padding:10px 13px">
+            <div class="timeline" id="activity-feed"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Today's Appointments</span><button class="btn btn-sm btn-outline" onclick="nav('appointments')">View all</button></div>
+          <div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Time</th><th>Status</th></tr></thead><tbody id="dash-appt-table"></tbody></table></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Appointments by Type</span></div>
+          <div class="card-body"><div class="chart-container" style="height:160px"><canvas id="chart-appt-types" style="width:100%;height:160px"></canvas></div></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Low Stock Alerts</span><span class="badge badge-warning" id="low-stock-badge">0</span></div>
+          <div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Medicine</th><th>Qty / Min</th><th>Level</th><th></th></tr></thead><tbody id="dash-stock-table"></tbody></table></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Stock Distribution</span></div>
+          <div class="card-body"><div class="chart-container" style="height:160px"><canvas id="chart-stock" style="width:100%;height:160px"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div class="view" id="view-patients">
+      <div class="page-header">
+        <div><div class="page-title">Patient Registry</div><div class="page-subtitle" id="pt-count-lbl">0 patients</div></div>
+        <div class="page-actions">
+          <input type="text" class="form-input" style="width:210px" placeholder="Search patients…" oninput="filterPt(this.value)" id="pt-search">
+          <select class="form-select" style="width:130px" onchange="filterPtStatus(this.value)"><option value="">All Status</option><option value="Active">Active</option><option value="Discharged">Discharged</option><option value="Admitted">Admitted</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-patient')">+ Register Patient</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Age/Sex</th><th>Blood</th><th>Phone</th><th>Allergies</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead><tbody id="patients-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="view" id="view-appointments">
+      <div class="page-header">
+        <div><div class="page-title">Appointments</div><div class="page-subtitle">Schedule and track patient visits</div></div>
+        <div class="page-actions">
+          <input type="date" class="form-input" style="width:145px" id="appt-filter-date" onchange="filterAppts()">
+          <select class="form-select" style="width:140px" id="appt-filter-status" onchange="filterAppts()"><option value="">All Status</option><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-appt')">+ Book Appointment</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Ref</th><th>Patient</th><th>Doctor</th><th>Date & Time</th><th>Type</th><th>Priority</th><th>Status</th><th>Actions</th></tr></thead><tbody id="appts-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- CONSULTATIONS -->
+    <div class="view" id="view-consultations">
+      <div class="page-header">
+        <div><div class="page-title">Consultations & EMR</div><div class="page-subtitle">Electronic medical records</div></div>
+        <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openModal('modal-consult')">+ New Consultation</button></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Ref</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Diagnosis</th><th>ICD</th><th>Linked Rx</th><th>Actions</th></tr></thead><tbody id="consult-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- LAB -->
+    <div class="view" id="view-lab">
+      <div class="page-header">
+        <div><div class="page-title">Laboratory</div><div class="page-subtitle">Test orders, processing and results</div></div>
+        <div class="page-actions">
+          <select class="form-select" style="width:140px" onchange="filterLab(this.value)"><option value="">All Status</option><option>Pending</option><option>Processing</option><option>Completed</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-lab')">+ Order Test</button>
+        </div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card"><div class="stat-icon blue">🧪</div><div><div class="stat-value" id="lab-total">0</div><div class="stat-label">Total Tests</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber">⏳</div><div><div class="stat-value" id="lab-pending">0</div><div class="stat-label">Pending</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="lab-done">0</div><div class="stat-label">Completed</div></div></div>
+        <div class="stat-card"><div class="stat-icon red">🚨</div><div><div class="stat-value" id="lab-stat">0</div><div class="stat-label">STAT Priority</div></div></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Patient</th><th>Test</th><th>Doctor</th><th>Date</th><th>Priority</th><th>Status</th><th>Result</th><th>Actions</th></tr></thead><tbody id="lab-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- NURSING -->
+    <div class="view" id="view-nursing">
+      <div class="page-header">
+        <div><div class="page-title">Nursing Logs</div><div class="page-subtitle">Ward notes, vitals and care records</div></div>
+        <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openModal('modal-nursing')">+ Add Log</button></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Patient</th><th>Nurse</th><th>Ward</th><th>Shift</th><th>Date</th><th>Vitals</th><th>Notes</th></tr></thead><tbody id="nursing-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- PHARMACY -->
+    <div class="view" id="view-pharmacy">
+      <div class="page-header">
+        <div><div class="page-title">Pharmacy Inventory</div><div class="page-subtitle">Stock management, expiry and batch tracking</div></div>
+        <div class="page-actions">
+          <input type="text" class="form-input" style="width:190px" placeholder="Search medicines…" oninput="filterPharm(this.value)">
+          <select class="form-select" style="width:130px" onchange="filterPharmCat(this.value)"><option value="">All Categories</option><option>Analgesic</option><option>Antibiotic</option><option>Antimalarial</option><option>Antiviral</option><option>Cardiovascular</option><option>Diabetes</option><option>Supplements</option><option>IV Fluids</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-stock')">+ Add Stock</button>
+        </div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card"><div class="stat-icon blue">💊</div><div><div class="stat-value" id="ph-total">0</div><div class="stat-label">Total Items</div></div></div>
+        <div class="stat-card"><div class="stat-icon red">⚠️</div><div><div class="stat-value" id="ph-low">0</div><div class="stat-label">Low Stock</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber">📅</div><div><div class="stat-value" id="ph-exp">0</div><div class="stat-label">Expiring ≤90 days</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">✓</div><div><div class="stat-value" id="ph-ok">0</div><div class="stat-label">Fully Stocked</div></div></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Code</th><th>Medicine</th><th>Category</th><th>Batch</th><th>Stock</th><th>Reorder At</th><th>Unit Price</th><th>Expiry</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pharm-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- PRESCRIPTIONS -->
+    <div class="view" id="view-prescriptions">
+      <div class="page-header">
+        <div><div class="page-title">Prescriptions</div><div class="page-subtitle">Issued prescriptions and fulfillment tracking</div></div>
+        <div class="page-actions">
+          <select class="form-select" style="width:130px" onchange="filterRx(this.value)"><option value="">All Status</option><option>Pending</option><option>Dispensed</option><option>Cancelled</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-rx')">+ Issue Prescription</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Rx#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Medicines</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rx-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- DISPENSING -->
+    <div class="view" id="view-dispensing">
+      <div class="page-header">
+        <div><div class="page-title">Dispensing Queue</div><div class="page-subtitle">Pending prescriptions ready for fulfillment</div></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Rx#</th><th>Patient</th><th>Medicines</th><th>Doctor</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="disp-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- BILLING -->
+    <div class="view" id="view-billing">
+      <div class="page-header">
+        <div><div class="page-title">Billing & Invoices</div><div class="page-subtitle">Financial records and payment collection</div></div>
+        <div class="page-actions">
+          <select class="form-select" style="width:130px" onchange="filterBill(this.value)"><option value="">All Status</option><option>Pending</option><option>Paid</option><option>Partial</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-bill')">+ New Invoice</button>
+        </div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card"><div class="stat-icon green">💰</div><div><div class="stat-value" id="bill-col">0</div><div class="stat-label">Collected (UGX)</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber">⏳</div><div><div class="stat-value" id="bill-pend">0</div><div class="stat-label">Outstanding (UGX)</div></div></div>
+        <div class="stat-card"><div class="stat-icon teal">📄</div><div><div class="stat-value" id="bill-cnt">0</div><div class="stat-label">Total Invoices</div></div></div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>Invoice#</th><th>Patient</th><th>Services</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="billing-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- STAFF -->
+    <div class="view" id="view-staff">
+      <div class="page-header">
+        <div><div class="page-title">Staff Management</div><div class="page-subtitle">Doctors, nurses and administrative personnel</div></div>
+        <div class="page-actions">
+          <select class="form-select" style="width:130px" onchange="filterStaff(this.value)"><option value="">All Roles</option><option>Doctor</option><option>Nurse</option><option>Pharmacist</option><option>Lab Technician</option><option>Admin</option></select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-staff')">+ Add Staff</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Specialization</th><th>Department</th><th>Branch</th><th>Contact</th><th>Status</th><th>Actions</th></tr></thead><tbody id="staff-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- BRANCHES -->
+    <div class="view" id="view-branches">
+      <div class="page-header">
+        <div><div class="page-title">Branch Management</div><div class="page-subtitle">Multi-location operations</div></div>
+        <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openModal('modal-branch')">+ Add Branch</button></div>
+      </div>
+      <div id="branches-grid" class="grid-3"></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="view" id="view-reports">
+      <div class="page-header">
+        <div><div class="page-title">Reports & Analytics</div><div class="page-subtitle">Operational intelligence</div></div>
+        <div class="page-actions">
+          <select class="form-select" style="width:140px" id="report-period"><option value="30">Last 30 days</option><option value="7">Last 7 days</option><option value="90">Last 90 days</option><option value="365">Last year</option></select>
+          <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card"><div class="card-header"><span class="card-title">Patient Registrations</span></div><div class="card-body" id="rpt-patients"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">Revenue Overview</span></div><div class="card-body" id="rpt-revenue"></div></div>
+      </div>
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card"><div class="card-header"><span class="card-title">Appointment Statistics</span></div><div class="card-body" id="rpt-appts"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">Pharmacy Statistics</span></div><div class="card-body" id="rpt-pharm"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Monthly Revenue Chart</span></div>
+        <div class="card-body"><div class="chart-container" style="height:200px"><canvas id="chart-monthly" style="width:100%;height:200px"></canvas></div></div>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <div class="view" id="view-audit">
+      <div class="page-header">
+        <div><div class="page-title">Audit Log</div><div class="page-subtitle">Immutable record of all system actions</div></div>
+        <div class="page-actions">
+          <input type="text" class="form-input" style="width:200px" placeholder="Filter logs…" oninput="filterAudit(this.value)">
+        </div>
+      </div>
+      <div class="alert alert-warning">🔒 All audit entries are read-only. Records cannot be modified or deleted by any user.</div>
+      <div class="card"><div class="card-body" style="padding:0"><div class="table-wrap"><table><thead><tr><th>#</th><th>Timestamp</th><th>User</th><th>Module</th><th>Action</th><th>Record ID</th><th>Details</th></tr></thead><tbody id="audit-table"></tbody></table></div></div></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="view" id="view-analytics">
+      <div class="page-header"><div><div class="page-title">Analytics</div><div class="page-subtitle">Cross-branch performance metrics</div></div></div>
+      <div id="analytics-content"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="view" id="view-settings">
+      <div class="page-header"><div class="page-title">System Settings</div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">General Configuration</span></div>
+          <div class="card-body">
+            <div class="form-row"><div><label class="form-label">Hospital Name</label><input class="form-input" id="s-name" value="Monalisa General Hospital"></div></div>
+            <div class="form-row cols-2">
+              <div><label class="form-label">Currency</label><select class="form-select" id="s-currency"><option>UGX</option><option>USD</option><option>KES</option><option>TZS</option></select></div>
+              <div><label class="form-label">Timezone</label><select class="form-select"><option>Africa/Kampala (UTC+3)</option><option>UTC</option><option>Africa/Nairobi</option></select></div>
+            </div>
+            <div class="form-row"><div><label class="form-label">Low Stock Threshold (default)</label><input class="form-input" type="number" id="s-threshold" value="50"></div></div>
+            <div class="form-row"><div><label class="form-label">Session Timeout (minutes)</label><input class="form-input" type="number" id="s-session" value="60"></div></div>
+            <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Notification Preferences</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <label style="display:flex;align-items:center;gap:9px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="n-stock" checked> Low stock alerts</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="n-appt" checked> Appointment reminders</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="n-lab" checked> Lab result ready</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="n-bill" checked> Billing notifications</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:.85rem;cursor:pointer"><input type="checkbox" id="n-email"> Email summaries (simulated)</label>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Data Management</span></div>
+          <div class="card-body">
+            <p style="font-size:.83rem;color:var(--gray-600);margin-bottom:12px">Manage local system data. Export creates a full JSON backup.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-outline btn-sm" onclick="exportFullBackup()">⬇ Export Backup</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmReset()">🗑 Reset Demo Data</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">User Roles Reference</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.82rem">
+              <div style="display:flex;justify-content:space-between"><span><span class="role-chip role-admin">Admin</span></span><span style="color:var(--gray-500)">Full system access</span></div>
+              <div style="display:flex;justify-content:space-between"><span><span class="role-chip role-doctor">Doctor</span></span><span style="color:var(--gray-500)">Patients, consult, lab, billing</span></div>
+              <div style="display:flex;justify-content:space-between"><span><span class="role-chip role-nurse">Nurse</span></span><span style="color:var(--gray-500)">Patients, nursing, appointments</span></div>
+              <div style="display:flex;justify-content:space-between"><span><span class="role-chip role-pharmacist">Pharmacist</span></span><span style="color:var(--gray-500)">Pharmacy, prescriptions, dispensing</span></div>
+              <div style="display:flex;justify-content:space-between"><span><span class="role-chip role-lab">Lab Tech</span></span><span style="color:var(--gray-500)">Laboratory only</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="view" id="view-support">
+      <div class="page-header"><div class="page-title">Help & Support</div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Contact Monalisa Tech Solutions</span></div>
+          <div class="card-body">
+            <div class="alert alert-info">Our technical team is available 24/7 for support, customization, and deployment assistance.</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+              <a href="mailto:kabuusumonalisa@gmail.com" style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--primary);font-weight:600"><span style="font-size:1.2rem">📧</span>kabuusumonalisa@gmail.com</a>
+              <a href="https://wa.me/256703953711" target="_blank" style="display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--success);font-weight:600"><span style="font-size:1.2rem">💬</span>WhatsApp: +256 703 953 711</a>
+            </div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--gray-100)">
+              <div style="font-size:.82rem;font-weight:700;color:var(--gray-700);margin-bottom:8px">Send a support request</div>
+              <div class="form-row"><div><textarea class="form-textarea" id="support-msg" placeholder="Describe your issue or request…" style="min-height:90px"></textarea></div></div>
+              <button class="btn btn-primary btn-sm" onclick="sendSupportMsg()">Send Request</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Quick Reference</span></div>
+          <div class="card-body">
+            <div class="timeline">
+              <div class="tl-item"><div><div class="tl-dot success"></div></div><div class="tl-content"><div class="tl-title">Register a patient</div><div class="tl-desc">Patients → Register Patient. System prevents duplicate records (same name + DOB).</div></div></div>
+              <div class="tl-item"><div><div class="tl-dot"></div></div><div class="tl-content"><div class="tl-title">Book an appointment</div><div class="tl-desc">Appointments → Book. Double-booking on same doctor + time is blocked automatically.</div></div></div>
+              <div class="tl-item"><div><div class="tl-dot"></div></div><div class="tl-content"><div class="tl-title">Issue a prescription</div><div class="tl-desc">Prescriptions → Issue. Requires a linked consultation. Stock is deducted on dispensing.</div></div></div>
+              <div class="tl-item"><div><div class="tl-dot warning"></div></div><div class="tl-content"><div class="tl-title">Undo last action</div><div class="tl-desc">Every action shows an Undo button in the notification toast for 8 seconds.</div></div></div>
+              <div class="tl-item"><div><div class="tl-dot teal"></div></div><div class="tl-content"><div class="tl-title">Print invoice</div><div class="tl-desc">Billing → click Print on any invoice to open a print-ready view.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Patient Modal -->
+<div class="modal-overlay" id="modal-patient">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Register New Patient</div><button class="modal-close" onclick="closeModal('modal-patient')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">First Name *</label><input class="form-input" id="p-fname" placeholder="First name"><div class="field-error" id="err-p-fname"></div></div><div><label class="form-label">Last Name *</label><input class="form-input" id="p-lname" placeholder="Last name"></div></div>
+      <div class="form-row cols-3"><div><label class="form-label">Date of Birth *</label><input class="form-input" type="date" id="p-dob"></div><div><label class="form-label">Sex *</label><select class="form-select" id="p-sex"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div><div><label class="form-label">Blood Type</label><select class="form-select" id="p-blood"><option value="">Unknown</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Phone *</label><input class="form-input" id="p-phone" placeholder="+256 700 000000"></div><div><label class="form-label">Email</label><input class="form-input" id="p-email" type="email" placeholder="optional"></div></div>
+      <div class="form-row"><div><label class="form-label">Address</label><input class="form-input" id="p-addr" placeholder="Street, City"></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Emergency Contact</label><input class="form-input" id="p-emerg" placeholder="Name & phone"></div><div><label class="form-label">Known Allergies</label><input class="form-input" id="p-allergy" placeholder="None or list allergies"></div></div>
+      <div class="form-row"><div><label class="form-label">Medical History</label><textarea class="form-textarea" id="p-history" placeholder="Existing conditions, past surgeries, chronic illnesses…"></textarea></div></div>
+      <div class="alert alert-danger" id="err-patient" style="display:none"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-patient')">Cancel</button><button class="btn btn-primary" onclick="registerPatient()">Register Patient</button></div>
+  </div>
+</div>
+
+<!-- Appointment Modal -->
+<div class="modal-overlay" id="modal-appt">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Book Appointment</div><button class="modal-close" onclick="closeModal('modal-appt')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="a-patient"><option value="">Select patient</option></select></div><div><label class="form-label">Doctor *</label><select class="form-select" id="a-doctor"><option value="">Select doctor</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Date *</label><input class="form-input" type="date" id="a-date"></div><div><label class="form-label">Time *</label><input class="form-input" type="time" id="a-time"></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Visit Type</label><select class="form-select" id="a-type"><option>General Consultation</option><option>Follow-up</option><option>Emergency</option><option>Lab Review</option><option>Surgery</option><option>Dental</option><option>Antenatal</option></select></div><div><label class="form-label">Priority</label><select class="form-select" id="a-pri"><option>Normal</option><option>Urgent</option><option>Emergency</option></select></div></div>
+      <div class="form-row"><div><label class="form-label">Notes</label><textarea class="form-textarea" id="a-notes" placeholder="Reason for visit…"></textarea></div></div>
+      <div class="alert alert-danger" id="err-appt" style="display:none"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-appt')">Cancel</button><button class="btn btn-primary" onclick="bookAppt()">Book Appointment</button></div>
+  </div>
+</div>
+
+<!-- Consultation Modal -->
+<div class="modal-overlay" id="modal-consult">
+  <div class="modal modal-lg">
+    <div class="modal-header"><div class="modal-title">New Consultation</div><button class="modal-close" onclick="closeModal('modal-consult')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="c-patient"><option value="">Select patient</option></select></div><div><label class="form-label">Doctor *</label><select class="form-select" id="c-doctor"><option value="">Select doctor</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Appointment Reference</label><select class="form-select" id="c-appt"><option value="">Walk-in / No ref</option></select></div><div><label class="form-label">Consultation Type</label><select class="form-select" id="c-type"><option>General</option><option>Specialist</option><option>Emergency</option><option>Follow-up</option><option>Antenatal</option></select></div></div>
+      <div class="form-row"><div><label class="form-label">Chief Complaint *</label><textarea class="form-textarea" id="c-complaint" placeholder="Patient's presenting symptoms and complaints…"></textarea></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Primary Diagnosis</label><input class="form-input" id="c-diag" placeholder="e.g. Malaria, Hypertension"></div><div><label class="form-label">ICD-10 Code</label><input class="form-input" id="c-icd" placeholder="e.g. B54, I10"></div></div>
+      <div class="form-row cols-4">
+        <div><label class="form-label">BP (mmHg)</label><input class="form-input" id="v-bp" placeholder="120/80"></div>
+        <div><label class="form-label">Temp (°C)</label><input class="form-input" id="v-temp" placeholder="37.0"></div>
+        <div><label class="form-label">Pulse (bpm)</label><input class="form-input" id="v-pulse" placeholder="72"></div>
+        <div><label class="form-label">Weight (kg)</label><input class="form-input" id="v-wt" placeholder="60"></div>
+      </div>
+      <div class="form-row"><div><label class="form-label">Clinical Notes & Treatment Plan</label><textarea class="form-textarea" id="c-notes" placeholder="Examination findings, investigations ordered, treatment prescribed, follow-up plan…" style="min-height:90px"></textarea></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-consult')">Cancel</button><button class="btn btn-primary" onclick="saveConsult()">Save Consultation</button></div>
+  </div>
+</div>
+
+<!-- Lab Modal -->
+<div class="modal-overlay" id="modal-lab">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Order Lab Test</div><button class="modal-close" onclick="closeModal('modal-lab')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="lab-pt"><option value="">Select patient</option></select></div><div><label class="form-label">Ordered By *</label><select class="form-select" id="lab-dr"><option value="">Select doctor</option></select></div></div>
+      <div class="form-row cols-2">
+        <div><label class="form-label">Test Type *</label><select class="form-select" id="lab-type"><option>Full Blood Count (FBC)</option><option>Malaria RDT</option><option>HIV Test</option><option>Blood Glucose (Fasting)</option><option>HbA1c</option><option>Liver Function Test</option><option>Kidney Function Test</option><option>Urine Analysis</option><option>Chest X-Ray</option><option>ECG</option><option>COVID-19 Antigen</option><option>Hepatitis B Surface Antigen</option><option>Lipid Profile</option><option>Thyroid Function (TSH)</option><option>Pregnancy Test</option><option>Blood Culture</option><option>Sputum Culture</option></select></div>
+        <div><label class="form-label">Priority</label><select class="form-select" id="lab-pri"><option>Routine</option><option>Urgent</option><option>STAT</option></select></div>
+      </div>
+      <div class="form-row"><div><label class="form-label">Clinical Notes</label><textarea class="form-textarea" id="lab-notes" placeholder="Reason for test, clinical context…"></textarea></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-lab')">Cancel</button><button class="btn btn-primary" onclick="orderLab()">Order Test</button></div>
+  </div>
+</div>
+
+<!-- Nursing Modal -->
+<div class="modal-overlay" id="modal-nursing">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Nursing Log</div><button class="modal-close" onclick="closeModal('modal-nursing')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="nr-pt"><option value="">Select patient</option></select></div><div><label class="form-label">Nurse *</label><select class="form-select" id="nr-nurse"><option value="">Select nurse</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Ward</label><input class="form-input" id="nr-ward" placeholder="e.g. Ward A, ICU, Maternity"></div><div><label class="form-label">Shift</label><select class="form-select" id="nr-shift"><option>Morning (6am–2pm)</option><option>Afternoon (2pm–10pm)</option><option>Night (10pm–6am)</option></select></div></div>
+      <div class="form-row cols-4">
+        <div><label class="form-label">BP</label><input class="form-input" id="nr-bp" placeholder="120/80"></div>
+        <div><label class="form-label">Temp (°C)</label><input class="form-input" id="nr-temp" placeholder="37.0"></div>
+        <div><label class="form-label">Pulse (bpm)</label><input class="form-input" id="nr-pulse" placeholder="72"></div>
+        <div><label class="form-label">SpO2 (%)</label><input class="form-input" id="nr-spo2" placeholder="98"></div>
+      </div>
+      <div class="form-row"><div><label class="form-label">Nursing Notes *</label><textarea class="form-textarea" id="nr-notes" placeholder="Care given, patient condition, medications administered, observations…"></textarea></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-nursing')">Cancel</button><button class="btn btn-primary" onclick="saveNursing()">Save Log</button></div>
+  </div>
+</div>
+
+<!-- Stock Modal -->
+<div class="modal-overlay" id="modal-stock">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Pharmacy Stock</div><button class="modal-close" onclick="closeModal('modal-stock')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Medicine Name *</label><input class="form-input" id="st-name" placeholder="e.g. Paracetamol 500mg"></div><div><label class="form-label">Generic Name</label><input class="form-input" id="st-generic" placeholder="e.g. Acetaminophen"></div></div>
+      <div class="form-row cols-3"><div><label class="form-label">Category</label><select class="form-select" id="st-cat"><option>Analgesic</option><option>Antibiotic</option><option>Antimalarial</option><option>Antiviral</option><option>Antiretroviral</option><option>Antifungal</option><option>Cardiovascular</option><option>Diabetes</option><option>Supplements</option><option>Antiseptic</option><option>IV Fluids</option><option>Other</option></select></div><div><label class="form-label">Dosage Form</label><select class="form-select" id="st-form"><option>Tablets</option><option>Capsules</option><option>Syrup</option><option>Injection</option><option>Cream/Ointment</option><option>Eye/Ear Drops</option><option>IV Solution</option><option>Inhaler</option></select></div><div><label class="form-label">Strength</label><input class="form-input" id="st-str" placeholder="e.g. 500mg"></div></div>
+      <div class="form-row cols-3"><div><label class="form-label">Quantity *</label><input class="form-input" type="number" id="st-qty" placeholder="0" min="1"></div><div><label class="form-label">Unit Price (UGX)</label><input class="form-input" type="number" id="st-price" placeholder="0"></div><div><label class="form-label">Reorder Level</label><input class="form-input" type="number" id="st-reorder" placeholder="50"></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Batch Number</label><input class="form-input" id="st-batch" placeholder="e.g. BTC-2025-001"></div><div><label class="form-label">Expiry Date *</label><input class="form-input" type="date" id="st-expiry"></div></div>
+      <div class="form-row"><div><label class="form-label">Supplier / Manufacturer</label><input class="form-input" id="st-sup" placeholder="Supplier name"></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-stock')">Cancel</button><button class="btn btn-primary" onclick="addStock()">Add to Inventory</button></div>
+  </div>
+</div>
+
+<!-- Prescription Modal -->
+<div class="modal-overlay" id="modal-rx">
+  <div class="modal modal-lg">
+    <div class="modal-header"><div class="modal-title">Issue Prescription</div><button class="modal-close" onclick="closeModal('modal-rx')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="rx-pt"><option value="">Select patient</option></select></div><div><label class="form-label">Doctor *</label><select class="form-select" id="rx-dr"><option value="">Select doctor</option></select></div></div>
+      <div class="form-row"><div><label class="form-label">Consultation Reference *</label><select class="form-select" id="rx-con"><option value="">Select consultation (required)</option></select><div class="form-hint">Prescriptions must be linked to a consultation record.</div></div></div>
+      <div style="border:1px solid var(--gray-200);border-radius:8px;padding:13px;margin-bottom:11px">
+        <div style="font-size:.82rem;font-weight:700;color:var(--gray-700);margin-bottom:9px">Prescribed Medicines</div>
+        <div id="rx-items"></div>
+        <button class="btn btn-outline btn-sm" onclick="addRxRow()">+ Add Medicine</button>
+      </div>
+      <div class="form-row"><div><label class="form-label">Pharmacist Notes</label><textarea class="form-textarea" id="rx-notes" placeholder="Dispensing instructions, warnings…"></textarea></div></div>
+      <div class="alert alert-danger" id="err-rx" style="display:none"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-rx')">Cancel</button><button class="btn btn-primary" onclick="issueRx()">Issue Prescription</button></div>
+  </div>
+</div>
+
+<!-- Billing Modal -->
+<div class="modal-overlay" id="modal-bill">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Create Invoice</div><button class="modal-close" onclick="closeModal('modal-bill')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Patient *</label><select class="form-select" id="b-pt"><option value="">Select patient</option></select></div><div><label class="form-label">Payment Method</label><select class="form-select" id="b-method"><option>Cash</option><option>Mobile Money</option><option>Insurance</option><option>Credit Card</option><option>Bank Transfer</option></select></div></div>
+      <div style="border:1px solid var(--gray-200);border-radius:8px;padding:13px;margin-bottom:11px">
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:9px">Services / Items</div>
+        <div id="bill-rows"></div>
+        <button class="btn btn-outline btn-sm" onclick="addBillRow()">+ Add Item</button>
+      </div>
+      <div style="text-align:right;font-size:1.08rem;font-weight:800;color:var(--gray-900)">Total: UGX <span id="bill-total">0</span></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-bill')">Cancel</button><button class="btn btn-success" onclick="createBill()">Generate Invoice</button></div>
+  </div>
+</div>
+
+<!-- Staff Modal -->
+<div class="modal-overlay" id="modal-staff">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Staff Member</div><button class="modal-close" onclick="closeModal('modal-staff')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2"><div><label class="form-label">Full Name *</label><input class="form-input" id="sf-name" placeholder="Full name"></div><div><label class="form-label">Role *</label><select class="form-select" id="sf-role"><option value="">Select role</option><option>Doctor</option><option>Nurse</option><option>Pharmacist</option><option>Lab Technician</option><option>Admin</option><option>Receptionist</option><option>Accountant</option><option>Radiologist</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Specialization</label><input class="form-input" id="sf-spec" placeholder="e.g. General Medicine"></div><div><label class="form-label">Department</label><select class="form-select" id="sf-dept"><option>General Medicine</option><option>Pediatrics</option><option>Surgery</option><option>Obstetrics & Gynecology</option><option>Pharmacy</option><option>Laboratory</option><option>Emergency</option><option>Radiology</option><option>Administration</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Phone *</label><input class="form-input" id="sf-ph" placeholder="+256…"></div><div><label class="form-label">Email</label><input class="form-input" id="sf-em" type="email" placeholder="optional"></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Branch</label><select class="form-select" id="sf-branch"><option>Main Hospital</option><option>Nakawa Clinic</option><option>Entebbe Branch</option></select></div><div><label class="form-label">License / ID #</label><input class="form-input" id="sf-lic" placeholder="Professional license number"></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-staff')">Cancel</button><button class="btn btn-primary" onclick="addStaff()">Add Staff Member</button></div>
+  </div>
+</div>
+
+<!-- Branch Modal -->
+<div class="modal-overlay" id="modal-branch">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add New Branch</div><button class="modal-close" onclick="closeModal('modal-branch')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div><label class="form-label">Branch Name *</label><input class="form-input" id="br-name" placeholder="e.g. Jinja Branch"></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Location *</label><input class="form-input" id="br-loc" placeholder="City / District"></div><div><label class="form-label">Type</label><select class="form-select" id="br-type"><option>Hospital</option><option>Clinic</option><option>Pharmacy</option><option>Laboratory</option><option>Dispensary</option></select></div></div>
+      <div class="form-row cols-2"><div><label class="form-label">Phone</label><input class="form-input" id="br-ph" placeholder="+256…"></div><div><label class="form-label">Branch Manager</label><input class="form-input" id="br-mgr" placeholder="Manager name"></div></div>
+      <div class="form-row"><div><label class="form-label">Services Offered</label><input class="form-input" id="br-svc" placeholder="e.g. OPD, Laboratory, Pharmacy"></div></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-branch')">Cancel</button><button class="btn btn-primary" onclick="addBranch()">Add Branch</button></div>
+  </div>
+</div>
+
+<!-- Patient Detail Modal -->
+<div class="modal-overlay" id="modal-pt-detail">
+  <div class="modal modal-xl">
+    <div class="modal-header"><div class="modal-title" id="ptd-title">Patient</div><button class="modal-close" onclick="closeModal('modal-pt-detail')">×</button></div>
+    <div class="modal-body" id="ptd-body"></div>
+    <div class="modal-footer" id="ptd-footer"></div>
+  </div>
+</div>
+
+<!-- Invoice Print Modal -->
+<div class="modal-overlay" id="modal-invoice">
+  <div class="modal modal-lg">
+    <div class="modal-header"><div class="modal-title">Invoice</div><button class="modal-close" onclick="closeModal('modal-invoice')">×</button></div>
+    <div class="modal-body" id="invoice-body"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-invoice')">Close</button><button class="btn btn-primary" onclick="window.print()">🖨 Print Invoice</button></div>
+  </div>
+</div>
+
+<!-- Email Simulation Modal -->
+<div class="modal-overlay" id="modal-email">
+  <div class="modal modal-lg">
+    <div class="modal-header"><div class="modal-title">✉️ Email System</div><button class="modal-close" onclick="closeModal('modal-email')">×</button></div>
+    <div class="modal-body" style="padding:0">
+      <div class="panel-tabs">
+        <div class="panel-tab active" onclick="switchEmailTab(this,'inbox')">Inbox <span class="badge badge-primary" id="inbox-count">0</span></div>
+        <div class="panel-tab" onclick="switchEmailTab(this,'compose')">Compose</div>
+        <div class="panel-tab" onclick="switchEmailTab(this,'sent')">Sent</div>
+      </div>
+      <div class="panel-body" id="email-tab-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Chatbot -->
+<div id="chatbot-toggle" onclick="toggleChat()" style="position:relative">💬<div class="chat-unread-dot" id="chat-dot"></div></div>
+<div id="chatbot-panel">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">🤖</div>
+    <div><div class="chatbot-title">Medi Assistant</div><div class="chatbot-subtitle">● Online · Powered by Monalisa Tech Solutions</div></div>
+    <button class="chatbot-close" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chatbot-messages" id="chat-msgs"></div>
+  <div class="chatbot-input-area">
+    <input class="chatbot-input" id="chat-in" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chatbot-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<a href="https://wa.me/256703953711" target="_blank" id="wa-btn" title="WhatsApp Support">💬</a>
+<div id="toast-container"></div>
+<script>
+'use strict';
+// ════════════════════════════════════════════════════════════
+// CENTRAL STATE ENGINE
+// ════════════════════════════════════════════════════════════
+const S = {
+  user:null, branch:0,
+  branches:[
+    {id:0,name:'Main Hospital — Kampala',type:'Hospital',location:'Kampala',phone:'+256 700 100001',manager:'Dr. Sarah Nkosi',services:'Full Hospital, Lab, Pharmacy',active:true},
+    {id:1,name:'Nakawa Clinic',type:'Clinic',location:'Nakawa, Kampala',phone:'+256 700 100002',manager:'Nurse Agnes Akello',services:'OPD, Pharmacy, Lab',active:true},
+    {id:2,name:'Entebbe Branch',type:'Hospital',location:'Entebbe',phone:'+256 700 100003',manager:'Dr. James Oti',services:'Full Hospital Services',active:true}
+  ],
+  patients:[], appointments:[], consultations:[], labTests:[],
+  nursingLogs:[], prescriptions:[], pharmacy:[], billing:[],
+  staff:[], notifications:[], auditLog:[],
+  emails:{inbox:[],sent:[]},
+  ids:{patient:1,appt:1,consult:1,lab:1,nursing:1,rx:1,bill:1,staff:1,branch:3},
+  settings:{hospitalName:'Monalisa General Hospital',currency:'UGX',threshold:50}
+};
+
+const ROLE_PERMS = {
+  'System Administrator':['all'],'Super Administrator':['all'],
+  'Doctor':['dashboard','patients','appointments','consultations','lab','pharmacy','prescriptions','billing','reports','settings','support','analytics'],
+  'Nurse':['dashboard','patients','appointments','nursing','settings','support'],
+  'Pharmacist':['dashboard','patients','pharmacy','prescriptions','dispensing','settings','support'],
+  'Lab Technician':['dashboard','patients','lab','settings','support'],
+  'Patient':['dashboard','patients','appointments','prescriptions','billing','support']
+};
+
+// ════════════════════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const fmtDate = d => d.toISOString().split('T')[0];
+const addDays = (d,n) => { const r=new Date(d); r.setDate(r.getDate()+n); return r; };
+const rndPast = n => fmtDate(addDays(new Date(),-Math.floor(Math.random()*n)));
+const calcAge = dob => { const b=new Date(dob),n=new Date(); let a=n.getFullYear()-b.getFullYear(); if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--; return a; };
+const fmt = n => Number(n||0).toLocaleString();
+const fmtUGX = n => 'UGX '+fmt(n);
+const tsNow = () => new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ptName = id => { const p=S.patients.find(x=>x.id===id); return p?p.fname+' '+p.lname:id; };
+const drName = id => { const s=S.staff.find(x=>x.id===id); return s?s.name:id; };
+const statusBadge = s => ({'Active':'badge-success','Completed':'badge-success','In Stock':'badge-success','Paid':'badge-success','Dispensed':'badge-success','Scheduled':'badge-primary','In Progress':'badge-teal','Processing':'badge-teal','Pending':'badge-warning','Low Stock':'badge-warning','Out of Stock':'badge-danger','Cancelled':'badge-danger','STAT':'badge-danger','Urgent':'badge-warning','Routine':'badge-gray','Admitted':'badge-teal','Discharged':'badge-gray'}[s]||'badge-gray');
+
+// ════════════════════════════════════════════════════════════
+// SEED DATA
+// ════════════════════════════════════════════════════════════
+function seed() {
+  const staffData = [
+    {name:'Dr. Sarah Nkosi',role:'Doctor',spec:'General Medicine',dept:'General Medicine',branch:'Main Hospital',phone:'+256 700 200001',email:'snkosi@medicore.ug',lic:'UG-MED-1001'},
+    {name:'Dr. James Oti',role:'Doctor',spec:'Pediatrics',dept:'Pediatrics',branch:'Main Hospital',phone:'+256 700 200002',email:'joti@medicore.ug',lic:'UG-MED-1002'},
+    {name:'Dr. Grace Achen',role:'Doctor',spec:'Surgery',dept:'Surgery',branch:'Entebbe Branch',phone:'+256 700 200003',email:'gachen@medicore.ug',lic:'UG-MED-1003'},
+    {name:'Dr. Ivan Mukasa',role:'Doctor',spec:'Internal Medicine',dept:'General Medicine',branch:'Nakawa Clinic',phone:'+256 700 200004',email:'imukasa@medicore.ug',lic:'UG-MED-1004'},
+    {name:'Nurse Agnes Akello',role:'Nurse',spec:'General Nursing',dept:'General Medicine',branch:'Main Hospital',phone:'+256 700 200005',email:'aakello@medicore.ug',lic:'UG-NRS-2001'},
+    {name:'Nurse Paul Odongo',role:'Nurse',spec:'ICU Nursing',dept:'Emergency',branch:'Main Hospital',phone:'+256 700 200006',email:'podongo@medicore.ug',lic:'UG-NRS-2002'},
+    {name:'Pharm. Rita Apio',role:'Pharmacist',spec:'Clinical Pharmacy',dept:'Pharmacy',branch:'Main Hospital',phone:'+256 700 200007',email:'rapio@medicore.ug',lic:'UG-PHM-3001'},
+    {name:'Lab. Tech Moses Wekesa',role:'Lab Technician',spec:'Hematology',dept:'Laboratory',branch:'Main Hospital',phone:'+256 700 200008',email:'mwekesa@medicore.ug',lic:'UG-LAB-4001'},
+    {name:'Joan Nansubuga',role:'Admin',spec:'Hospital Administration',dept:'Administration',branch:'Main Hospital',phone:'+256 700 200009',email:'jnansubuga@medicore.ug',lic:''}
+  ];
+  staffData.forEach(s => { const id='STF-'+String(S.ids.staff++).padStart(3,'0'); S.staff.push({id,status:'Active',...s}); });
+
+  const ptsData = [
+    {fname:'Emmanuel',lname:'Ssemakula',dob:'1985-03-12',sex:'Male',blood:'O+',phone:'+256 777 100001',email:'essemakula@gmail.com',addr:'Kampala, Nakawa',emerg:'Mary Ssemakula +256777100099',allergy:'Penicillin',history:'Hypertension (2018), on Amlodipine 5mg OD',branch:0,status:'Active'},
+    {fname:'Fatuma',lname:'Nabirye',dob:'1992-07-22',sex:'Female',blood:'A+',phone:'+256 756 200001',email:'fnabirye@gmail.com',addr:'Kampala, Kololo',emerg:'Hassan Nabirye +256756200099',allergy:'None',history:'Type 2 Diabetes mellitus (2020), on Metformin 500mg BD',branch:0,status:'Active'},
+    {fname:'Peter',lname:'Okello',dob:'1978-11-05',sex:'Male',blood:'B+',phone:'+256 712 300001',email:'',addr:'Entebbe',emerg:'Grace Okello +256712300099',allergy:'Sulfa drugs',history:'No significant past medical history',branch:1,status:'Active'},
+    {fname:'Joyce',lname:'Atim',dob:'2001-02-14',sex:'Female',blood:'AB+',phone:'+256 702 400001',email:'jatim@gmail.com',addr:'Jinja Road, Kampala',emerg:'David Atim +256702400099',allergy:'None',history:'Appendectomy (2019)',branch:0,status:'Active'},
+    {fname:'Robert',lname:'Mugisha',dob:'1960-09-30',sex:'Male',blood:'O-',phone:'+256 704 500001',email:'',addr:'Makindye, Kampala',emerg:'Susan Mugisha +256704500099',allergy:'Aspirin, NSAIDs',history:'Ischaemic heart disease, PCI stent placement (2021). On dual antiplatelet therapy.',branch:0,status:'Admitted'},
+    {fname:'Mary',lname:'Lakwena',dob:'1998-05-18',sex:'Female',blood:'A-',phone:'+256 773 600001',email:'mlakwena@gmail.com',addr:'Gulu',emerg:'Simon Lakwena +256773600099',allergy:'None',history:'No known conditions',branch:2,status:'Active'},
+    {fname:'Hassan',lname:'Ntambi',dob:'1955-12-01',sex:'Male',blood:'B-',phone:'+256 701 700001',email:'',addr:'Mbale',emerg:'Aisha Ntambi +256701700099',allergy:'Codeine',history:'COPD, Type 2 Diabetes, CKD Stage 3',branch:2,status:'Active'}
+  ];
+  ptsData.forEach(p => { const id='P'+String(S.ids.patient++).padStart(3,'0'); S.patients.push({id,age:calcAge(p.dob),regDate:rndPast(90),...p}); });
+
+  const medsData = [
+    {name:'Paracetamol 500mg',generic:'Acetaminophen',cat:'Analgesic',form:'Tablets',str:'500mg',qty:1200,price:500,reorder:200,batch:'BTC-2025-001',expiry:'2027-06-30',sup:'Cipla Uganda',branch:0},
+    {name:'Amoxicillin 250mg',generic:'Amoxicillin Trihydrate',cat:'Antibiotic',form:'Capsules',str:'250mg',qty:45,price:1500,reorder:100,batch:'BTC-2025-002',expiry:'2026-09-15',sup:'GSK Uganda',branch:0},
+    {name:'Artemether/Lumefantrine',generic:'CoArtem',cat:'Antimalarial',form:'Tablets',str:'20/120mg',qty:320,price:8000,reorder:50,batch:'BTC-2025-003',expiry:'2026-12-31',sup:'Novartis',branch:0},
+    {name:'Metformin 500mg',generic:'Metformin HCl',cat:'Diabetes',form:'Tablets',str:'500mg',qty:0,price:2000,reorder:100,batch:'BTC-2025-004',expiry:'2027-03-20',sup:'Cipla Uganda',branch:0},
+    {name:'Amlodipine 5mg',generic:'Amlodipine Besylate',cat:'Cardiovascular',form:'Tablets',str:'5mg',qty:280,price:3000,reorder:100,batch:'BTC-2025-005',expiry:'2026-08-01',sup:'Pfizer',branch:0},
+    {name:'Dextrose 5% IV 500ml',generic:'Dextrose',cat:'IV Fluids',form:'IV Solution',str:'5% 500ml',qty:18,price:12000,reorder:30,batch:'BTC-2025-006',expiry:'2025-12-31',sup:'B-Braun',branch:0},
+    {name:'ORS Sachets',generic:'Oral Rehydration Salts',cat:'Supplements',form:'Sachets',str:'27.9g/L',qty:600,price:800,reorder:100,batch:'BTC-2025-007',expiry:'2028-01-01',sup:'UNICEF Supply',branch:0},
+    {name:'Diclofenac 50mg',generic:'Diclofenac Sodium',cat:'Analgesic',form:'Tablets',str:'50mg',qty:90,price:1200,reorder:100,batch:'BTC-2025-008',expiry:'2026-07-15',sup:'Cipla Uganda',branch:0},
+    {name:'Ciprofloxacin 500mg',generic:'Ciprofloxacin HCl',cat:'Antibiotic',form:'Tablets',str:'500mg',qty:150,price:3500,reorder:60,batch:'BTC-2025-009',expiry:'2027-02-28',sup:'Bayer',branch:1},
+    {name:'Atenolol 50mg',generic:'Atenolol',cat:'Cardiovascular',form:'Tablets',str:'50mg',qty:8,price:2500,reorder:50,batch:'BTC-2025-010',expiry:'2026-11-30',sup:'AstraZeneca',branch:0}
+  ];
+  medsData.forEach((m,i) => { S.pharmacy.push({code:'MED-'+String(i+1).padStart(4,'0'),...m}); });
+
+  const today = new Date();
+  const apptData = [
+    {pid:'P001',did:'STF-001',date:fmtDate(today),time:'09:00',type:'General Consultation',pri:'Normal',status:'Scheduled',notes:'Blood pressure follow-up',branch:0},
+    {pid:'P002',did:'STF-001',date:fmtDate(today),time:'10:00',type:'General Consultation',pri:'Normal',status:'In Progress',notes:'Diabetes management review',branch:0},
+    {pid:'P003',did:'STF-002',date:fmtDate(today),time:'11:30',type:'Follow-up',pri:'Urgent',status:'Scheduled',notes:'Post-lab results',branch:1},
+    {pid:'P004',did:'STF-001',date:fmtDate(addDays(today,1)),time:'09:30',type:'General Consultation',pri:'Normal',status:'Scheduled',notes:'',branch:0},
+    {pid:'P005',did:'STF-002',date:fmtDate(addDays(today,-1)),time:'14:00',type:'Emergency',pri:'Emergency',status:'Completed',notes:'Cardiac episode',branch:0},
+    {pid:'P006',did:'STF-004',date:fmtDate(addDays(today,2)),time:'10:00',type:'Antenatal',pri:'Normal',status:'Scheduled',notes:'8-week ANC visit',branch:2}
+  ];
+  apptData.forEach(a => { const ref='APT-'+String(S.ids.appt++).padStart(4,'0'); S.appointments.push({ref,...a}); });
+
+  S.consultations.push({ref:'CON-0001',pid:'P001',did:'STF-001',apptRef:'APT-0001',type:'General',complaint:'Persistent headache and dizziness for 3 days. BP readings at home consistently above 150/90.',diag:'Hypertension (uncontrolled)',icd:'I10',vitals:{bp:'160/100',temp:'36.8',pulse:'88',wt:'78'},notes:'Patient non-compliant with medication. Counselled on diet and exercise. Adjusted Amlodipine to 10mg OD. Review in 2 weeks.',date:fmtDate(today),branch:0});
+  S.ids.consult = 2;
+
+  const labData = [
+    {pid:'P001',did:'STF-001',test:'Full Blood Count (FBC)',pri:'Routine',status:'Completed',result:'WBC: 7.2 ×10⁹/L, RBC: 4.8 ×10¹²/L, Hgb: 13.5 g/dL, Plt: 250 ×10⁹/L — All within normal range.',notes:'',branch:0},
+    {pid:'P002',did:'STF-001',test:'Blood Glucose (Fasting)',pri:'Urgent',status:'Completed',result:'Fasting Blood Glucose: 11.2 mmol/L — ELEVATED (Normal: 3.9–5.5 mmol/L). Review diabetes management plan.',notes:'Known diabetic',branch:0},
+    {pid:'P003',did:'STF-002',test:'Malaria RDT',pri:'STAT',status:'Pending',result:'',notes:'High fever 39.2°C, rigors',branch:1},
+    {pid:'P004',did:'STF-001',test:'HIV Test',pri:'Routine',status:'Pending',result:'',notes:'Routine screening',branch:0},
+    {pid:'P005',did:'STF-002',test:'ECG',pri:'STAT',status:'Completed',result:'Sinus rhythm, ST-elevation in leads II, III, aVF. Inferior STEMI pattern. Urgent cardiology referral initiated.',notes:'Chest pain, diaphoresis',branch:0}
+  ];
+  labData.forEach(l => { const id='LAB-'+String(S.ids.lab++).padStart(4,'0'); S.labTests.push({id,date:fmtDate(today),...l}); });
+
+  S.prescriptions.push({rxNo:'RX-0001',pid:'P001',did:'STF-001',conRef:'CON-0001',meds:[{name:'Amlodipine 5mg',dose:'1 tablet',freq:'Once daily',dur:'30 days'},{name:'Paracetamol 500mg',dose:'2 tablets',freq:'Three times daily',dur:'5 days'}],notes:'Take with food. Monitor blood pressure daily. Return in 2 weeks.',status:'Dispensed',date:fmtDate(today),branch:0});
+  S.ids.rx = 2;
+
+  S.nursingLogs.push({id:'NL-0001',pid:'P001',nid:'STF-005',ward:'Ward A – Bed 4',shift:'Morning (6am–2pm)',vitals:{bp:'155/98',temp:'36.9',pulse:'90',spo2:'98%'},notes:'Patient admitted for BP monitoring. Amlodipine 10mg administered at 08:00. Alert and oriented. Low-sodium diet advised. BP check in 2 hours.',date:fmtDate(today),branch:0});
+  S.ids.nursing = 2;
+
+  const billData = [
+    {pid:'P001',svc:'Consultation + FBC Lab Test',amount:45000,method:'Cash',status:'Paid',branch:0},
+    {pid:'P002',svc:'Consultation + Blood Glucose Test',amount:45000,method:'Mobile Money',status:'Paid',branch:0},
+    {pid:'P003',svc:'Emergency Consultation',amount:80000,method:'Insurance',status:'Pending',branch:1},
+    {pid:'P005',svc:'Emergency + ECG + Lab Panel + ICU 1 day',amount:450000,method:'Insurance',status:'Paid',branch:0},
+    {pid:'P006',svc:'ANC Visit + Ultrasound',amount:120000,method:'Cash',status:'Pending',branch:2}
+  ];
+  billData.forEach(b => { const inv='INV-'+String(S.ids.bill++).padStart(5,'0'); S.billing.push({inv,date:fmtDate(today),...b}); });
+
+  S.emails.inbox = [
+    {id:'em1',from:'Ministry of Health Uganda',subject:'Drug Stock Report Required — Q2 2025',body:'Please submit your quarterly drug stock report by 30th June 2025. Use the attached template.',time:'2 hours ago',read:false},
+    {id:'em2',from:'National Medical Stores',subject:'Delivery Notification — Order #NMS-4521',body:'Your order of IV fluids and antibiotics has been dispatched. Expected delivery: 3 business days.',time:'Yesterday',read:false},
+    {id:'em3',from:'Cipla Uganda',subject:'Price List Update — July 2025',body:'Please find our updated price list effective 1st July 2025. Key changes: Amoxicillin +5%, Paracetamol unchanged.',time:'2 days ago',read:true},
+    {id:'em4',from:'Uganda Insurance Commission',subject:'Claim Processing — Patient P003',body:'Claim for patient Peter Okello (P003) is under review. Please submit additional clinical documentation.',time:'3 days ago',read:true}
+  ];
+
+  addNotif('Low stock: Amoxicillin 250mg (45 units remaining)','warning','Pharmacy');
+  addNotif('Low stock: Atenolol 50mg (8 units remaining)','warning','Pharmacy');
+  addNotif('Lab result ready: FBC for Emmanuel Ssemakula (P001)','info','Laboratory');
+  addNotif('Emergency admission: Robert Mugisha (P005) — Cardiac episode','danger','Hospital');
+  addNotif('Metformin 500mg is OUT OF STOCK — reorder required','danger','Pharmacy');
+
+  logAudit('System','system_initialized','SYS','MediCore Pro v2.0 started. Demo data seeded.');
+  logAudit('Hospital','patients_seeded','P001–P007','7 patients registered');
+  logAudit('Pharmacy','stock_seeded','MED-0001–0010','10 inventory items loaded');
+  logAudit('Hospital','consultations_seeded','CON-0001','1 consultation record loaded');
+  logAudit('Pharmacy','prescriptions_seeded','RX-0001','1 prescription record loaded');
+}
+
+// ════════════════════════════════════════════════════════════
+// AUDIT
+// ════════════════════════════════════════════════════════════
+function logAudit(mod,action,recId,details) {
+  S.auditLog.unshift({n:S.auditLog.length+1,ts:tsNow(),user:S.user?S.user.username:'System',mod,action,recId:recId||'—',details:details||''});
+  if(S.auditLog.length>1000) S.auditLog.pop();
+}
+
+// ════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ════════════════════════════════════════════════════════════
+function addNotif(text,type,mod) {
+  S.notifications.unshift({id:uid(),text,type,mod,time:tsNow(),read:false});
+  refreshNotifBadge();
+}
+function refreshNotifBadge() {
+  const u = S.notifications.filter(n=>!n.read).length;
+  const b = $('notif-count'); if(!b) return;
+  b.textContent = u>9?'9+':u;
+  b.style.display = u ? 'flex' : 'none';
+}
+function renderNotifList() {
+  const el=$('notif-list'); if(!el) return;
+  const colors={danger:'var(--danger)',warning:'var(--warning)',info:'var(--primary)',success:'var(--success)'};
+  el.innerHTML = S.notifications.slice(0,15).map(n=>`
+    <div class="notif-item ${n.read?'':'unread'}" onclick="markNotifRead('${n.id}')">
+      <div class="notif-dot" style="background:${colors[n.type]||'var(--primary)'}"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.81rem;font-weight:${n.read?400:600};color:var(--gray-800)">${esc(n.text)}</div>
+        <div style="font-size:.71rem;color:var(--gray-400);margin-top:2px">${n.time} · ${n.mod}</div>
+      </div>
+    </div>`).join('') || '<div style="padding:16px;text-align:center;font-size:.82rem;color:var(--gray-400)">No notifications</div>';
+}
+function markNotifRead(id) { const n=S.notifications.find(x=>x.id===id); if(n) n.read=true; refreshNotifBadge(); renderNotifList(); }
+function markAllRead() { S.notifications.forEach(n=>n.read=true); refreshNotifBadge(); renderNotifList(); }
+function toggleNotifPanel() { const p=$('notif-panel'); renderNotifList(); p.classList.toggle('open'); }
+
+// ════════════════════════════════════════════════════════════
+// TOAST WITH UNDO
+// ════════════════════════════════════════════════════════════
+function toast(title, msg, type='info', undoFn=null) {
+  const c = $('toast-container');
+  const icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ️'}</span>
+    <div class="toast-content">
+      <div class="toast-title">${esc(title)}</div>
+      ${msg?`<div class="toast-msg">${esc(msg)}</div>`:''}
+      ${undoFn?`<div class="toast-actions"><button class="toast-undo" onclick="execUndo(this)">↩ Undo</button></div>`:''}
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  if(undoFn) el._undo = undoFn;
+  c.appendChild(el);
+  setTimeout(()=>{ if(el.parentElement) el.remove(); }, 5500);
+}
+function execUndo(btn) {
+  const el=btn.closest('.toast');
+  if(el&&el._undo){ el._undo(); el.remove(); toast('Action undone','','success'); }
+}
+
+// ════════════════════════════════════════════════════════════
+// SYNC / OFFLINE
+// ════════════════════════════════════════════════════════════
+function updateSyncStatus() {
+  const el=$('sync-status'); if(!el) return;
+  const on=navigator.onLine;
+  el.className='sync-status '+(on?'online':'offline');
+  el.innerHTML=`<div class="sync-dot"></div><span class="label">${on?'Online':'Offline'}</span>`;
+}
+window.addEventListener('online',()=>{ updateSyncStatus(); toast('Back online','Changes synced.','success'); });
+window.addEventListener('offline',()=>{ updateSyncStatus(); toast('You are offline','Local data preserved.','warning'); });
+
+// ════════════════════════════════════════════════════════════
+// LOGIN & AUTH
+// ════════════════════════════════════════════════════════════
+const USERS = [
+  {username:'admin',password:'admin123',role:'System Administrator',initials:'A'},
+  {username:'superadmin',password:'superadmin123',role:'Super Administrator',initials:'SA'},
+  {username:'doctor',password:'doc123',role:'Doctor',initials:'D'},
+  {username:'nurse',password:'nurse123',role:'Nurse',initials:'N'},
+  {username:'pharmacist',password:'pharm123',role:'Pharmacist',initials:'P'},
+  {username:'labtech',password:'lab123',role:'Lab Technician',initials:'L'}
+];
+
+function switchLoginTab(tab) {
+  document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('active',['staff','patient','admin'][i]===tab));
+  ['staff','patient','admin'].forEach(t=>{ const el=$('ltab-'+t); if(el) el.style.display=t===tab?'block':'none'; });
+}
+function doLogin() {
+  const u=$('l-user').value.trim(), p=$('l-pass').value;
+  const user=USERS.find(x=>x.username===u&&x.password===p);
+  const err=$('login-err');
+  if(!user){err.textContent='Invalid username or password.';err.style.display='block';return;}
+  err.style.display='none'; S.user={...user}; launchApp();
+}
+function doPatientLogin() {
+  const id=$('pt-id').value.trim().toUpperCase();
+  const pt=S.patients.find(p=>p.id===id);
+  if(!pt){toast('Not found','No patient with that ID.','error');return;}
+  S.user={username:pt.fname+' '+pt.lname,role:'Patient',initials:pt.fname[0],patientId:pt.id};
+  launchApp();
+}
+function doAdminLogin() {
+  const u=$('ad-user').value.trim(), p=$('ad-pass').value;
+  const user=USERS.find(x=>x.username===u&&x.password===p);
+  if(user){S.user={...user};launchApp();}
+  else toast('Invalid admin credentials','','error');
+}
+function launchApp() {
+  const ls=$('login-screen');
+  ls.style.opacity='0'; setTimeout(()=>ls.style.display='none',400);
+  $('app').classList.add('visible');
+  ['user-avatar','sb-avatar'].forEach(id=>{ const el=$(id); if(el) el.textContent=S.user.initials; });
+  $('sb-name').textContent=S.user.username;
+  $('sb-role').textContent=S.user.role;
+  $('dd-user-name').textContent=S.user.username;
+  $('dd-user-role').textContent=S.user.role;
+  applyRoleUI(); refreshNotifBadge(); updateSyncStatus();
+  nav('dashboard'); initChat();
+  logAudit('Auth','user_login','',S.user.username+' signed in as '+S.user.role);
+  saveState();
+}
+function doLogout() {
+  if(!confirm('Sign out of MediCore Pro?')) return;
+  logAudit('Auth','user_logout','',S.user.username+' signed out');
+  $('app').classList.remove('visible');
+  const ls=$('login-screen');
+  ls.style.display='flex'; ls.style.opacity='0';
+  setTimeout(()=>ls.style.opacity='1',10);
+  S.user=null;
+}
+
+// ════════════════════════════════════════════════════════════
+// ROLE-BASED UI
+// ════════════════════════════════════════════════════════════
+function applyRoleUI() {
+  const role=S.user.role;
+  const perms=ROLE_PERMS[role]||[];
+  const hasAll=perms.includes('all');
+  document.querySelectorAll('.nav-item[data-roles]').forEach(item=>{
+    const roles=item.dataset.roles.split(',');
+    const allowed=hasAll||roles.includes('all')||roles.some(r=>{
+      if(r==='admin') return role==='System Administrator'||role==='Super Administrator';
+      if(r==='doctor') return role==='Doctor';
+      if(r==='nurse') return role==='Nurse';
+      if(r==='pharmacist') return role==='Pharmacist';
+      if(r==='lab') return role==='Lab Technician';
+      return false;
+    });
+    item.classList.toggle('hidden',!allowed);
+  });
+}
+function canAccess(view) {
+  if(!S.user) return false;
+  const perms=ROLE_PERMS[S.user.role]||[];
+  if(perms.includes('all')) return true;
+  return perms.includes(view);
+}
+
+// ════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════
+function nav(view) {
+  if(!canAccess(view)&&view!=='dashboard'){
+    toast('Access Denied','Your role ('+S.user.role+') cannot access this section.','error');
+    return;
+  }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el=$('view-'+view); if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===view));
+  if(window.innerWidth<960){
+    $('sidebar').classList.remove('open');
+    $('sidebar-overlay').classList.remove('show');
+  }
+  closeAllDropdowns();
+  const renders={
+    dashboard:renderDash, patients:renderPts, appointments:renderAppts,
+    consultations:renderConsults, lab:renderLab, nursing:renderNursing,
+    pharmacy:renderPharm, prescriptions:renderRxs, dispensing:renderDisp,
+    billing:renderBilling, staff:renderStaff, branches:renderBranches,
+    reports:renderReports, audit:renderAudit, analytics:renderAnalytics
+  };
+  if(renders[view]) renders[view]();
+}
+function toggleSidebar(){ $('sidebar').classList.toggle('open'); $('sidebar-overlay').classList.toggle('show'); }
+function switchBranch(v){ S.branch=parseInt(v); toast('Branch switched','Viewing: '+S.branches[S.branch].name,'info'); nav('dashboard'); }
+function closeAllDropdowns(){
+  $('notif-panel').classList.remove('open');
+  $('user-dropdown').classList.remove('open');
+  $('search-results').classList.remove('open');
+}
+function toggleUserMenu(){ $('user-dropdown').classList.toggle('open'); }
+function closeUserMenu(){ $('user-dropdown').classList.remove('open'); }
+
+document.addEventListener('click', e=>{
+  document.querySelectorAll('.modal-overlay').forEach(o=>{ if(e.target===o) o.classList.remove('open'); });
+  if(!$('notif-panel').contains(e.target)&&!$('notif-btn').contains(e.target)) $('notif-panel').classList.remove('open');
+  const dd=$('user-dropdown');
+  if(!dd.contains(e.target)&&!$('user-avatar').contains(e.target)) dd.classList.remove('open');
+});
+
+// ════════════════════════════════════════════════════════════
+// MODAL HELPERS
+// ════════════════════════════════════════════════════════════
+function openModal(id) {
+  const preps={
+    'modal-appt':prepApptModal,'modal-consult':prepConsultModal,
+    'modal-lab':prepLabModal,'modal-nursing':prepNursingModal,
+    'modal-rx':prepRxModal,'modal-bill':prepBillModal,
+    'modal-email':()=>renderEmailTab('inbox')
+  };
+  if(preps[id]) preps[id]();
+  $(id).classList.add('open');
+}
+function closeModal(id){ $(id).classList.remove('open'); }
+
+const statusBadgeClass = s => statusBadge(s);
+
+// ════════════════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════════════════
+function renderDash() {
+  const br=S.branches[S.branch];
+  $('dash-sub').textContent=br.name+' — '+new Date().toLocaleDateString('en-UG',{dateStyle:'full'});
+  const td=fmtDate(new Date());
+  const todayA=S.appointments.filter(a=>a.date===td&&a.branch===S.branch);
+  const pendA=S.appointments.filter(a=>a.status==='Scheduled'&&a.branch===S.branch);
+  const lowSt=S.pharmacy.filter(m=>m.qty<=m.reorder&&m.branch===S.branch);
+  const pendL=S.labTests.filter(l=>l.status==='Pending'&&l.branch===S.branch);
+  const rev=S.billing.filter(b=>b.status==='Paid'&&b.branch===S.branch).reduce((s,b)=>s+b.amount,0);
+  const brPts=S.patients.filter(p=>p.branch===S.branch);
+
+  $('stats-grid').innerHTML=`
+    <div class="stat-card"><div class="stat-icon blue">👤</div><div><div class="stat-value">${brPts.length}</div><div class="stat-label">Branch Patients</div><div class="stat-change up">↑ ${S.patients.length} system-wide</div></div></div>
+    <div class="stat-card"><div class="stat-icon teal">📅</div><div><div class="stat-value">${todayA.length}</div><div class="stat-label">Today's Appointments</div><div class="stat-change">${pendA.length} scheduled</div></div></div>
+    <div class="stat-card"><div class="stat-icon green">💰</div><div><div class="stat-value">${fmt(rev)}</div><div class="stat-label">Revenue (UGX)</div><div class="stat-change up">↑ Collected this period</div></div></div>
+    <div class="stat-card"><div class="stat-icon amber">🧪</div><div><div class="stat-value">${pendL.length}</div><div class="stat-label">Lab Tests Pending</div></div></div>
+    <div class="stat-card"><div class="stat-icon red">⚠️</div><div><div class="stat-value">${lowSt.length}</div><div class="stat-label">Low Stock Alerts</div></div></div>
+    <div class="stat-card"><div class="stat-icon purple">📋</div><div><div class="stat-value">${S.prescriptions.filter(r=>r.branch===S.branch).length}</div><div class="stat-label">Prescriptions</div></div></div>`;
+
+  $('appt-badge').textContent=pendA.length;
+
+  $('dash-appt-table').innerHTML=todayA.slice(0,6).map(a=>`
+    <tr><td>${ptName(a.pid)}</td><td>${drName(a.did)}</td><td><strong>${a.time}</strong></td>
+    <td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td></tr>`)
+    .join('')||'<tr><td colspan="4" style="text-align:center;color:var(--gray-400);padding:16px;font-size:.82rem">No appointments scheduled today</td></tr>';
+
+  $('low-stock-badge').textContent=lowSt.length+' items';
+  $('dash-stock-table').innerHTML=lowSt.slice(0,5).map(m=>{
+    const pct=Math.min(100,m.reorder>0?Math.round(m.qty/(m.reorder*2)*100):0);
+    return `<tr><td style="font-size:.82rem">${esc(m.name)}</td><td><strong>${m.qty}</strong>/${m.reorder}</td>
+      <td><div class="progress" style="width:70px"><div class="progress-bar ${m.qty===0?'danger':'warning'}" style="width:${pct}%"></div></div></td>
+      <td><button class="btn btn-xs btn-outline" onclick="openModal('modal-stock')">Restock</button></td></tr>`;
+  }).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--gray-500);padding:14px;font-size:.82rem">✓ All items sufficiently stocked</td></tr>';
+
+  $('activity-feed').innerHTML=S.auditLog.slice(0,10).map(a=>{
+    const dotMap={patient_created:'',appointment_booked:'',prescription_issued:'success',lab_ordered:'teal',billing_created:'success',stock_added:'warning',user_login:''};
+    return `<div class="tl-item"><div><div class="tl-dot ${dotMap[a.action]||''}"></div></div>
+      <div class="tl-content"><div class="tl-title">${a.action.replace(/_/g,' ')}</div>
+      <div class="tl-desc">${esc((a.details||'').substring(0,60))}</div>
+      <div class="tl-time">${a.ts}</div></div></div>`;
+  }).join('')||'<div style="font-size:.82rem;color:var(--gray-400)">No recent activity.</div>';
+
+  setTimeout(()=>{ drawRevChart(); drawApptChart(); drawStockChart(); }, 60);
+}
+function refreshDashboard(){ renderDash(); toast('Refreshed','Dashboard updated.','success'); }
+
+// ════════════════════════════════════════════════════════════
+// SVG CHARTS (pure Canvas)
+// ════════════════════════════════════════════════════════════
+function drawRevChart() {
+  const canvas=$('chart-revenue'); if(!canvas) return;
+  canvas.width=canvas.offsetWidth||420; canvas.height=160;
+  const ctx=canvas.getContext('2d'), W=canvas.width, H=canvas.height;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const base=S.billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0);
+  const vals=[35000,82000,57000,120000,95000,base||140000,78000];
+  const max=Math.max(...vals)||1;
+  const pad={l:48,r:14,t:12,b:28};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<=4;i++){
+    const y=pad.t+cH*(1-i/4);
+    ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#94a3b8'; ctx.font='10px system-ui'; ctx.textAlign='right';
+    ctx.fillText(fmt(Math.round(max*i/4/1000))+'K',pad.l-5,y+3);
+  }
+  ctx.setLineDash([]);
+  const pts=vals.map((v,i)=>({x:pad.l+i*cW/(vals.length-1),y:pad.t+cH*(1-v/max)}));
+  const grad=ctx.createLinearGradient(0,pad.t,0,pad.t+cH);
+  grad.addColorStop(0,'rgba(26,111,170,.3)'); grad.addColorStop(1,'rgba(26,111,170,0)');
+  ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
+  pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x,pad.t+cH); ctx.lineTo(pts[0].x,pad.t+cH); ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle='#1a6faa'; ctx.lineWidth=2.5; ctx.lineJoin='round';
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.stroke();
+  pts.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle='#1a6faa'; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke(); });
+  ctx.fillStyle='#94a3b8'; ctx.font='10px system-ui'; ctx.textAlign='center';
+  days.forEach((d,i)=>ctx.fillText(d,pad.l+i*cW/(vals.length-1),H-6));
+}
+
+function drawPieChart(canvasId, vals, colors, labels) {
+  const canvas=$(canvasId); if(!canvas) return;
+  canvas.width=canvas.offsetWidth||300; canvas.height=160;
+  const ctx=canvas.getContext('2d'), H=canvas.height;
+  ctx.clearRect(0,0,canvas.width,H);
+  const total=vals.reduce((s,v)=>s+v,0)||1;
+  const cx=H/2, cy=H/2, r=H/2-10;
+  let start=-Math.PI/2;
+  vals.forEach((v,i)=>{
+    if(v===0) return;
+    const sl=2*Math.PI*v/total;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,start+sl); ctx.closePath();
+    ctx.fillStyle=colors[i]; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    start+=sl;
+  });
+  const lx=H+12; let ly=18;
+  labels.forEach((l,i)=>{
+    ctx.fillStyle=colors[i]; ctx.fillRect(lx,ly-9,10,10);
+    ctx.fillStyle='#475569'; ctx.font='11px system-ui'; ctx.textAlign='left';
+    ctx.fillText(`${l} (${vals[i]})`,lx+14,ly); ly+=20;
+  });
+}
+
+function drawApptChart(){
+  const types=['General','Follow-up','Emergency','Other'];
+  const colors=['#1a6faa','#0d9488','#dc2626','#64748b'];
+  const vals=types.map((_,i)=>{
+    const maps=[['General Consultation'],['Follow-up'],['Emergency'],['Surgery','Dental','Lab Review','Antenatal']];
+    return S.appointments.filter(a=>a.branch===S.branch&&maps[i].some(t=>a.type.includes(t))).length;
+  });
+  drawPieChart('chart-appt-types',vals,colors,types);
+}
+function drawStockChart(){
+  const vals=[
+    S.pharmacy.filter(m=>m.branch===S.branch&&m.qty>m.reorder).length,
+    S.pharmacy.filter(m=>m.branch===S.branch&&m.qty>0&&m.qty<=m.reorder).length,
+    S.pharmacy.filter(m=>m.branch===S.branch&&m.qty===0).length
+  ];
+  drawPieChart('chart-stock',vals,['#16a34a','#d97706','#dc2626'],['In Stock','Low Stock','Out of Stock']);
+}
+function drawMonthlyChart(){
+  const canvas=$('chart-monthly'); if(!canvas) return;
+  canvas.width=canvas.offsetWidth||600; canvas.height=200;
+  const ctx=canvas.getContext('2d'), W=canvas.width, H=canvas.height;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const vals=[280000,340000,290000,420000,380000,510000,445000,620000,570000,490000,680000,590000];
+  const max=Math.max(...vals)||1;
+  const pad={l:60,r:18,t:14,b:30};
+  const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<=5;i++){
+    const y=pad.t+cH*(1-i/5);
+    ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#94a3b8'; ctx.font='10px system-ui'; ctx.textAlign='right';
+    ctx.fillText(fmt(Math.round(max*i/5/1000))+'K',pad.l-6,y+3);
+  }
+  ctx.setLineDash([]);
+  const bw=cW/months.length*0.6, gap=cW/months.length;
+  vals.forEach((v,i)=>{
+    const x=pad.l+i*gap+(gap-bw)/2, bh=cH*v/max;
+    const g=ctx.createLinearGradient(0,pad.t,0,pad.t+cH);
+    g.addColorStop(0,'#1a6faa'); g.addColorStop(1,'#0d9488');
+    ctx.fillStyle=g;
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(x,pad.t+cH-bh,bw,bh,3);
+    else ctx.rect(x,pad.t+cH-bh,bw,bh);
+    ctx.fill();
+    ctx.fillStyle='#94a3b8'; ctx.font='10px system-ui'; ctx.textAlign='center';
+    ctx.fillText(months[i],x+bw/2,H-6);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// PATIENTS
+// ════════════════════════════════════════════════════════════
+let _ptFilter='', _ptStat='';
+function renderPts() {
+  let list=[...S.patients];
+  if(_ptFilter) list=list.filter(p=>(p.fname+' '+p.lname+' '+p.id+' '+p.phone).toLowerCase().includes(_ptFilter.toLowerCase()));
+  if(_ptStat) list=list.filter(p=>p.status===_ptStat);
+  $('pt-count-lbl').textContent=list.length+' patient'+(list.length!==1?'s':'')+' registered';
+  $('patients-table').innerHTML=list.map(p=>`
+    <tr>
+      <td><strong>${p.id}</strong></td>
+      <td><a href="#" onclick="showPtDetail('${p.id}');return false" style="color:var(--primary);font-weight:600">${esc(p.fname+' '+p.lname)}</a></td>
+      <td>${p.age}y / ${p.sex}</td>
+      <td><strong style="color:${p.blood&&p.blood.includes('-')?'var(--danger)':'inherit'}">${p.blood||'—'}</strong></td>
+      <td style="font-size:.81rem">${p.phone}</td>
+      <td style="color:${p.allergy==='None'?'var(--gray-400)':'var(--danger)'};font-size:.79rem;font-weight:${p.allergy==='None'?400:600}">${p.allergy||'None'}</td>
+      <td style="font-size:.79rem">${p.regDate}</td>
+      <td><span class="badge ${statusBadge(p.status)}">${p.status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-xs btn-outline" onclick="showPtDetail('${p.id}')">View</button>
+        <button class="btn btn-xs btn-primary" onclick="quickBook('${p.id}')">Book</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">👤</div><h3>No patients found</h3><p>Try adjusting the search.</p></div></td></tr>';
+}
+function filterPt(v){ _ptFilter=v; renderPts(); }
+function filterPtStatus(v){ _ptStat=v; renderPts(); }
+function quickBook(pid){ prepApptModal(); $('a-patient').value=pid; openModal('modal-appt'); }
+
+function showPtDetail(id) {
+  const p=S.patients.find(x=>x.id===id); if(!p) return;
+  const appts=S.appointments.filter(a=>a.pid===id);
+  const labs=S.labTests.filter(l=>l.pid===id);
+  const rxs=S.prescriptions.filter(r=>r.pid===id);
+  const bills=S.billing.filter(b=>b.pid===id);
+  $('ptd-title').textContent=`${p.fname} ${p.lname} — ${p.id}`;
+  $('ptd-body').innerHTML=`
+    <div class="vitals-grid">
+      <div class="vital-box"><div class="vital-label">Age</div><div class="vital-value">${p.age}</div><div class="vital-unit">years</div></div>
+      <div class="vital-box"><div class="vital-label">Sex</div><div class="vital-value">${p.sex}</div></div>
+      <div class="vital-box"><div class="vital-label">Blood Type</div><div class="vital-value" style="color:${p.blood&&p.blood.includes('-')?'var(--danger)':'var(--gray-900)'}">${p.blood||'?'}</div></div>
+      <div class="vital-box"><div class="vital-label">Status</div><div class="vital-value" style="font-size:.85rem"><span class="badge ${statusBadge(p.status)}">${p.status}</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:.82rem;margin-bottom:12px">
+      <div><strong>📞</strong> ${p.phone}</div><div><strong>✉️</strong> ${p.email||'—'}</div>
+      <div><strong>📍</strong> ${p.addr||'—'}</div><div><strong>🚨 Emergency:</strong> ${p.emerg||'—'}</div>
+      <div><strong>⚕️ Allergies:</strong> <span style="color:${p.allergy==='None'?'var(--gray-500)':'var(--danger)'};font-weight:600">${p.allergy||'None'}</span></div>
+      <div><strong>📅 Registered:</strong> ${p.regDate}</div>
+    </div>
+    ${p.history?`<div class="alert alert-info" style="margin-bottom:12px"><strong>Medical History:</strong> ${esc(p.history)}</div>`:''}
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px">
+      <div class="vital-box" style="background:var(--primary-light)"><div class="vital-label">Appointments</div><div class="vital-value" style="font-size:1.2rem">${appts.length}</div></div>
+      <div class="vital-box" style="background:var(--teal-light)"><div class="vital-label">Lab Tests</div><div class="vital-value" style="font-size:1.2rem">${labs.length}</div></div>
+      <div class="vital-box" style="background:var(--success-light)"><div class="vital-label">Prescriptions</div><div class="vital-value" style="font-size:1.2rem">${rxs.length}</div></div>
+      <div class="vital-box" style="background:var(--warning-light)"><div class="vital-label">Billed (UGX)</div><div class="vital-value" style="font-size:.82rem">${fmt(bills.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0))}</div></div>
+    </div>
+    <div class="panel-tabs" id="ptd-tabs">
+      <div class="panel-tab active" onclick="ptdTab(this,'appts','${id}')">Appointments (${appts.length})</div>
+      <div class="panel-tab" onclick="ptdTab(this,'labs','${id}')">Lab Tests (${labs.length})</div>
+      <div class="panel-tab" onclick="ptdTab(this,'rx','${id}')">Prescriptions (${rxs.length})</div>
+      <div class="panel-tab" onclick="ptdTab(this,'bills','${id}')">Billing (${bills.length})</div>
+    </div>
+    <div id="ptd-tab-body" style="min-height:80px;padding-top:4px"></div>`;
+  $('ptd-footer').innerHTML=`
+    <button class="btn btn-outline" onclick="closeModal('modal-pt-detail')">Close</button>
+    <button class="btn btn-teal btn-sm" onclick="closeModal('modal-pt-detail');quickBook('${id}')">Book Appointment</button>
+    <button class="btn btn-primary btn-sm" onclick="closeModal('modal-pt-detail');nav('consultations');openModal('modal-consult');setTimeout(()=>{$('c-patient').value='${id}';},100)">New Consultation</button>`;
+  ptdTab(null,'appts',id);
+  openModal('modal-pt-detail');
+}
+function ptdTab(el,tab,pid) {
+  if(el){ document.querySelectorAll('#ptd-tabs .panel-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+  const body=$('ptd-tab-body'); if(!body) return;
+  if(tab==='appts'){
+    const d=S.appointments.filter(a=>a.pid===pid);
+    body.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Ref</th><th>Doctor</th><th>Date/Time</th><th>Type</th><th>Status</th></tr></thead><tbody>${d.map(a=>`<tr><td>${a.ref}</td><td>${drName(a.did)}</td><td>${a.date} ${a.time}</td><td>${a.type}</td><td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--gray-400);text-align:center;padding:12px">None</td></tr>'}</tbody></table></div>`;
+  } else if(tab==='labs'){
+    const d=S.labTests.filter(l=>l.pid===pid);
+    body.innerHTML=`<div class="table-wrap"><table><thead><tr><th>ID</th><th>Test</th><th>Date</th><th>Priority</th><th>Status</th><th>Result (preview)</th></tr></thead><tbody>${d.map(l=>`<tr><td>${l.id}</td><td>${l.test}</td><td>${l.date}</td><td><span class="badge ${statusBadge(l.pri)}">${l.pri}</span></td><td><span class="badge ${statusBadge(l.status)}">${l.status}</span></td><td style="font-size:.75rem;max-width:160px">${l.result?esc(l.result.substring(0,50))+'…':'—'}</td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--gray-400);text-align:center;padding:12px">None</td></tr>'}</tbody></table></div>`;
+  } else if(tab==='rx'){
+    const d=S.prescriptions.filter(r=>r.pid===pid);
+    body.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Rx#</th><th>Medicines</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead><tbody>${d.map(r=>`<tr><td>${r.rxNo}</td><td style="font-size:.78rem">${r.meds.map(m=>esc(m.name)).join(', ')}</td><td>${drName(r.did)}</td><td>${r.date}</td><td><span class="badge ${statusBadge(r.status)}">${r.status}</span></td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--gray-400);text-align:center;padding:12px">None</td></tr>'}</tbody></table></div>`;
+  } else if(tab==='bills'){
+    const d=S.billing.filter(b=>b.pid===pid);
+    body.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Services</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody>${d.map(b=>`<tr><td>${b.inv}</td><td style="font-size:.78rem">${esc(b.svc)}</td><td>UGX ${fmt(b.amount)}</td><td>${b.method}</td><td><span class="badge ${statusBadge(b.status)}">${b.status}</span></td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--gray-400);text-align:center;padding:12px">None</td></tr>'}</tbody></table></div>`;
+  }
+}
+
+function registerPatient() {
+  const fname=$('p-fname').value.trim(), lname=$('p-lname').value.trim();
+  const dob=$('p-dob').value, sex=$('p-sex').value, phone=$('p-phone').value.trim();
+  const err=$('err-patient'); err.style.display='none';
+  if(!fname||!lname||!dob||!sex||!phone){ err.textContent='Fill all required fields (marked *).'; err.style.display='flex'; return; }
+  const dup=S.patients.find(p=>p.fname.toLowerCase()===fname.toLowerCase()&&p.lname.toLowerCase()===lname.toLowerCase()&&p.dob===dob);
+  if(dup){ err.textContent=`Duplicate detected: this patient already exists as ${dup.id}. Duplicate records are not permitted.`; err.style.display='flex'; return; }
+  const id='P'+String(S.ids.patient++).padStart(3,'0');
+  const patient={id,fname,lname,dob,sex,blood:$('p-blood').value,phone,email:$('p-email').value,addr:$('p-addr').value,emerg:$('p-emerg').value,allergy:$('p-allergy').value||'None',history:$('p-history').value,age:calcAge(dob),regDate:fmtDate(new Date()),branch:S.branch,status:'Active'};
+  S.patients.push(patient);
+  logAudit('Hospital','patient_created',id,`${fname} ${lname} registered`);
+  addNotif(`New patient: ${fname} ${lname} (${id})`,'info','Hospital');
+  const undoFn=()=>{ const i=S.patients.findIndex(x=>x.id===id); if(i>-1){ S.patients.splice(i,1); S.ids.patient--; } renderPts(); };
+  closeModal('modal-patient');
+  toast('Patient Registered',`${fname} ${lname} — ID: ${id}`,'success',undoFn);
+  ['p-fname','p-lname','p-dob','p-sex','p-blood','p-phone','p-email','p-addr','p-emerg','p-allergy','p-history'].forEach(i=>{const el=$(i);if(el)el.value='';});
+  if($('view-patients').classList.contains('active')) renderPts();
+  renderDash(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// APPOINTMENTS
+// ════════════════════════════════════════════════════════════
+function renderAppts() {
+  const dateF=$('appt-filter-date')?.value||'';
+  const statF=$('appt-filter-status')?.value||'';
+  let list=[...S.appointments].reverse();
+  if(dateF) list=list.filter(a=>a.date===dateF);
+  if(statF) list=list.filter(a=>a.status===statF);
+  $('appts-table').innerHTML=list.map(a=>`
+    <tr>
+      <td><strong>${a.ref}</strong></td><td>${ptName(a.pid)}</td><td>${drName(a.did)}</td>
+      <td>${a.date} <strong>${a.time}</strong></td><td style="font-size:.8rem">${a.type}</td>
+      <td><span class="badge ${a.pri==='Emergency'?'badge-danger':a.pri==='Urgent'?'badge-warning':'badge-gray'}">${a.pri}</span></td>
+      <td><span class="badge ${statusBadge(a.status)}">${a.status}</span></td>
+      <td style="white-space:nowrap">
+        ${a.status==='Scheduled'?`<button class="btn btn-xs btn-teal" onclick="updateApptStatus('${a.ref}','In Progress')">Start</button> `:''}
+        ${a.status==='In Progress'?`<button class="btn btn-xs btn-success" onclick="updateApptStatus('${a.ref}','Completed')">Complete</button> `:''}
+        ${a.status==='Scheduled'?`<button class="btn btn-xs btn-outline" onclick="updateApptStatus('${a.ref}','Cancelled')">Cancel</button>`:''}
+      </td>
+    </tr>`).join('')||'<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📅</div><h3>No appointments found</h3></div></td></tr>';
+}
+function filterAppts(){ renderAppts(); }
+function prepApptModal(){
+  $('a-patient').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('a-doctor').innerHTML='<option value="">Select doctor</option>'+S.staff.filter(s=>s.role==='Doctor').map(d=>`<option value="${d.id}">${d.name} · ${d.spec}</option>`).join('');
+  $('a-date').value=fmtDate(new Date()); $('a-time').value='09:00';
+  $('err-appt').style.display='none';
+}
+function bookAppt(){
+  const pid=$('a-patient').value, did=$('a-doctor').value, date=$('a-date').value, time=$('a-time').value;
+  const err=$('err-appt'); err.style.display='none';
+  if(!pid||!did||!date||!time){ err.textContent='Patient, doctor, date and time are required.'; err.style.display='flex'; return; }
+  const conflict=S.appointments.find(a=>a.did===did&&a.date===date&&a.time===time&&a.status!=='Cancelled');
+  if(conflict){ err.textContent=`Double-booking blocked: ${drName(did)} already has an appointment at ${time} on ${date} (${conflict.ref}).`; err.style.display='flex'; return; }
+  const ref='APT-'+String(S.ids.appt++).padStart(4,'0');
+  const appt={ref,pid,did,date,time,type:$('a-type').value,pri:$('a-pri').value,status:'Scheduled',notes:$('a-notes').value,branch:S.branch};
+  S.appointments.push(appt);
+  logAudit('Hospital','appointment_booked',ref,`${ptName(pid)} with ${drName(did)} on ${date} ${time}`);
+  addNotif(`Appointment booked: ${ptName(pid)} — ${date} ${time}`,'info','Hospital');
+  const undoFn=()=>{ const i=S.appointments.findIndex(x=>x.ref===ref); if(i>-1){ S.appointments.splice(i,1); S.ids.appt--; } renderAppts(); $('appt-badge').textContent=S.appointments.filter(a=>a.status==='Scheduled').length; };
+  closeModal('modal-appt'); $('a-notes').value='';
+  toast('Appointment Booked',`${ref} · ${date} at ${time}`,'success',undoFn);
+  renderAppts(); $('appt-badge').textContent=S.appointments.filter(a=>a.status==='Scheduled').length; saveState();
+}
+function updateApptStatus(ref,status){
+  const a=S.appointments.find(x=>x.ref===ref); if(!a) return;
+  const prev=a.status; a.status=status;
+  logAudit('Hospital','appointment_updated',ref,`${prev} → ${status}`);
+  toast('Appointment Updated',`${ref} is now ${status}`,'success',()=>{ a.status=prev; renderAppts(); });
+  renderAppts(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// CONSULTATIONS
+// ════════════════════════════════════════════════════════════
+function renderConsults(){
+  $('consult-table').innerHTML=[...S.consultations].reverse().map(c=>{
+    const rx=S.prescriptions.find(r=>r.conRef===c.ref);
+    return `<tr>
+      <td><strong>${c.ref}</strong></td><td>${ptName(c.pid)}</td><td>${drName(c.did)}</td><td>${c.date}</td>
+      <td><strong>${esc(c.diag||'—')}</strong></td><td style="font-size:.77rem">${c.icd||'—'}</td>
+      <td>${rx?`<span class="badge badge-success">${rx.rxNo}</span>`:'<span class="badge badge-gray">None</span>'}</td>
+      <td><button class="btn btn-xs btn-outline" onclick="viewConsultDetail('${c.ref}')">View EMR</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">🩺</div><h3>No consultations recorded</h3></div></td></tr>';
+}
+function viewConsultDetail(ref){
+  const c=S.consultations.find(x=>x.ref===ref); if(!c) return;
+  const v=c.vitals||{};
+  const p=S.patients.find(x=>x.id===c.pid);
+  alert(`CONSULTATION — ${c.ref}\n\nPatient: ${ptName(c.pid)}${p?' ('+p.allergy+' allergy)':''}\nDoctor: ${drName(c.did)}\nDate: ${c.date}\nType: ${c.type}\n\nChief Complaint:\n${c.complaint||'—'}\n\nDiagnosis: ${c.diag||'—'} (${c.icd||'—'})\n\nVitals: BP ${v.bp||'—'} | Temp ${v.temp||'—'}°C | Pulse ${v.pulse||'—'} bpm | Weight ${v.wt||'—'} kg\n\nClinical Notes:\n${c.notes||'—'}`);
+}
+function prepConsultModal(){
+  $('c-patient').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('c-doctor').innerHTML='<option value="">Select doctor</option>'+S.staff.filter(s=>s.role==='Doctor').map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  $('c-appt').innerHTML='<option value="">Walk-in / No appointment</option>'+S.appointments.filter(a=>['Scheduled','In Progress'].includes(a.status)).map(a=>`<option value="${a.ref}">${a.ref} — ${ptName(a.pid)}</option>`).join('');
+}
+function saveConsult(){
+  const pid=$('c-patient').value, did=$('c-doctor').value, complaint=$('c-complaint').value.trim();
+  if(!pid||!did||!complaint){ toast('Required fields missing','Select patient, doctor and enter chief complaint.','error'); return; }
+  const ref='CON-'+String(S.ids.consult++).padStart(4,'0');
+  S.consultations.push({ref,pid,did,apptRef:$('c-appt').value,type:$('c-type').value,complaint,diag:$('c-diag').value,icd:$('c-icd').value,vitals:{bp:$('v-bp').value,temp:$('v-temp').value,pulse:$('v-pulse').value,wt:$('v-wt').value},notes:$('c-notes').value,date:fmtDate(new Date()),branch:S.branch});
+  logAudit('Hospital','consultation_created',ref,`${ptName(pid)} — ${$('c-diag').value||'No diagnosis'}`);
+  closeModal('modal-consult');
+  toast('Consultation Saved',ref,'success');
+  renderConsults(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// LAB TESTS
+// ════════════════════════════════════════════════════════════
+function renderLab(statusF=''){
+  const tot=S.labTests.length, pend=S.labTests.filter(l=>l.status==='Pending').length;
+  const done=S.labTests.filter(l=>l.status==='Completed').length, stat=S.labTests.filter(l=>l.pri==='STAT').length;
+  $('lab-total').textContent=tot; $('lab-pending').textContent=pend; $('lab-done').textContent=done; $('lab-stat').textContent=stat;
+  let list=[...S.labTests].reverse();
+  if(statusF) list=list.filter(l=>l.status===statusF);
+  $('lab-table').innerHTML=list.map(l=>`
+    <tr>
+      <td><strong>${l.id}</strong></td><td>${ptName(l.pid)}</td><td style="font-size:.8rem">${l.test}</td><td>${drName(l.did)}</td><td>${l.date}</td>
+      <td><span class="badge ${statusBadge(l.pri)}">${l.pri}</span></td>
+      <td><span class="badge ${statusBadge(l.status)}">${l.status}</span></td>
+      <td style="font-size:.76rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.result?esc(l.result.substring(0,55)):'<em style="color:var(--gray-400)">Awaiting</em>'}</td>
+      <td>${l.status==='Pending'?`<button class="btn btn-xs btn-success" onclick="enterResult('${l.id}')">Enter Result</button>`:'<span style="color:var(--success);font-size:.8rem">✓ Done</span>'}</td>
+    </tr>`).join('')||'<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">🧪</div><h3>No lab tests ordered</h3></div></td></tr>';
+}
+function filterLab(v){ renderLab(v); }
+function prepLabModal(){
+  $('lab-pt').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('lab-dr').innerHTML='<option value="">Select doctor</option>'+S.staff.filter(s=>s.role==='Doctor').map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+}
+function orderLab(){
+  const pid=$('lab-pt').value, did=$('lab-dr').value;
+  if(!pid||!did){ toast('Required','Select patient and requesting doctor.','error'); return; }
+  const id='LAB-'+String(S.ids.lab++).padStart(4,'0');
+  S.labTests.push({id,pid,did,test:$('lab-type').value,pri:$('lab-pri').value,notes:$('lab-notes').value,status:'Pending',result:'',date:fmtDate(new Date()),branch:S.branch});
+  logAudit('Laboratory','lab_ordered',id,`${$('lab-type').value} for ${ptName(pid)} [${$('lab-pri').value}]`);
+  closeModal('modal-lab');
+  toast('Lab Test Ordered',id,'success');
+  renderLab(); saveState();
+}
+function enterResult(id){
+  const lab=S.labTests.find(l=>l.id===id); if(!lab) return;
+  const result=prompt(`Enter result for:\n${lab.test}\nPatient: ${ptName(lab.pid)}\n\nType result below:`, lab.result||'');
+  if(result===null) return;
+  if(!result.trim()){ toast('Empty result','Please enter the test result.','error'); return; }
+  lab.result=result.trim(); lab.status='Completed';
+  logAudit('Laboratory','lab_result_entered',id,`Result recorded for ${ptName(lab.pid)}`);
+  addNotif(`Lab result ready: ${lab.test} — ${ptName(lab.pid)}`,'info','Laboratory');
+  toast('Result Recorded',lab.id,'success');
+  renderLab(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// NURSING
+// ════════════════════════════════════════════════════════════
+function renderNursing(){
+  $('nursing-table').innerHTML=[...S.nursingLogs].reverse().map(l=>`
+    <tr>
+      <td><strong>${l.id}</strong></td><td>${ptName(l.pid)}</td><td>${drName(l.nid)}</td>
+      <td>${l.ward}</td><td style="font-size:.77rem">${l.shift}</td><td>${l.date}</td>
+      <td style="font-size:.76rem;white-space:nowrap">BP:${l.vitals.bp||'—'} T:${l.vitals.temp||'—'} P:${l.vitals.pulse||'—'} O2:${l.vitals.spo2||'—'}</td>
+      <td style="font-size:.77rem;max-width:200px;overflow:hidden;text-overflow:ellipsis">${esc((l.notes||'—').substring(0,80))}</td>
+    </tr>`).join('')||'<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">💉</div><h3>No nursing logs</h3></div></td></tr>';
+}
+function prepNursingModal(){
+  $('nr-pt').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('nr-nurse').innerHTML='<option value="">Select nurse</option>'+S.staff.filter(s=>s.role==='Nurse').map(n=>`<option value="${n.id}">${n.name}</option>`).join('');
+}
+function saveNursing(){
+  const pid=$('nr-pt').value, nid=$('nr-nurse').value, notes=$('nr-notes').value.trim();
+  if(!pid||!nid||!notes){ toast('Required','Select patient, nurse and enter notes.','error'); return; }
+  const id='NL-'+String(S.ids.nursing++).padStart(4,'0');
+  S.nursingLogs.push({id,pid,nid,ward:$('nr-ward').value||'General Ward',shift:$('nr-shift').value,vitals:{bp:$('nr-bp').value,temp:$('nr-temp').value,pulse:$('nr-pulse').value,spo2:$('nr-spo2').value},notes,date:fmtDate(new Date()),branch:S.branch});
+  logAudit('Nursing','nursing_log_created',id,`${ptName(pid)} — ${$('nr-ward').value||'General Ward'}`);
+  closeModal('modal-nursing');
+  toast('Nursing Log Saved',id,'success');
+  renderNursing(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// PHARMACY
+// ════════════════════════════════════════════════════════════
+let _pharmQ='', _pharmCat='';
+function renderPharm(){
+  const today=new Date(), exp90=addDays(today,90);
+  let list=[...S.pharmacy];
+  if(_pharmQ) list=list.filter(m=>m.name.toLowerCase().includes(_pharmQ.toLowerCase())||m.generic.toLowerCase().includes(_pharmQ.toLowerCase()));
+  if(_pharmCat) list=list.filter(m=>m.cat===_pharmCat);
+  const low=S.pharmacy.filter(m=>m.qty>0&&m.qty<=m.reorder).length;
+  const out=S.pharmacy.filter(m=>m.qty===0).length;
+  const expiring=S.pharmacy.filter(m=>{ const d=new Date(m.expiry); return d<=exp90&&d>today; }).length;
+  $('ph-total').textContent=S.pharmacy.length; $('ph-low').textContent=low+out; $('ph-exp').textContent=expiring; $('ph-ok').textContent=S.pharmacy.filter(m=>m.qty>m.reorder).length;
+  $('pharm-table').innerHTML=list.map(m=>{
+    const pct=m.reorder>0?Math.min(100,Math.round(m.qty/(m.reorder*2)*100)):100;
+    const expD=new Date(m.expiry), expired=expD<today, expSoon=expD<=exp90&&expD>today;
+    const stLabel=m.qty===0?'Out of Stock':m.qty<=m.reorder?'Low Stock':'In Stock';
+    const stBadge=m.qty===0?'badge-danger':m.qty<=m.reorder?'badge-warning':'badge-success';
+    return `<tr>
+      <td><strong>${m.code}</strong></td>
+      <td>${esc(m.name)}<div style="font-size:.7rem;color:var(--gray-400)">${esc(m.generic)} · ${m.form}</div></td>
+      <td><span class="badge badge-primary">${m.cat}</span></td>
+      <td style="font-size:.77rem">${m.batch||'—'}</td>
+      <td><strong>${m.qty}</strong><div class="progress" style="width:66px;margin-top:3px"><div class="progress-bar ${m.qty===0?'danger':m.qty<=m.reorder?'warning':'success'}" style="width:${pct}%"></div></div></td>
+      <td>${m.reorder}</td>
+      <td>UGX ${fmt(m.price)}</td>
+      <td style="font-size:.8rem;${expired?'color:var(--danger);font-weight:700;text-decoration:line-through':expSoon?'color:var(--warning);font-weight:600':''}">${m.expiry}${expired?' ❌':expSoon?' ⚠️':''}</td>
+      <td><span class="badge ${stBadge}">${stLabel}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-xs btn-teal" onclick="adjustQty('${m.code}',1)">+ Add</button>
+        <button class="btn btn-xs btn-outline" onclick="adjustQty('${m.code}',-1)">– Use</button>
+      </td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">💊</div><h3>No items in inventory</h3></div></td></tr>';
+}
+function filterPharm(v){ _pharmQ=v; renderPharm(); }
+function filterPharmCat(v){ _pharmCat=v; renderPharm(); }
+function adjustQty(code,dir){
+  const m=S.pharmacy.find(x=>x.code===code); if(!m) return;
+  const qty=parseInt(prompt(`${dir>0?'Add':'Deduct'} units for ${m.name}\nCurrent stock: ${m.qty}\n\nEnter quantity:`,dir>0?'100':'1'));
+  if(isNaN(qty)||qty<=0) return;
+  if(dir<0&&m.qty-qty<0){ toast('Insufficient stock',`Only ${m.qty} units available. Cannot deduct ${qty}.`,'error'); return; }
+  const prev=m.qty; m.qty+=dir*qty;
+  logAudit('Pharmacy','stock_adjusted',code,`${m.name}: ${dir>0?'+':''}${dir*qty} → ${m.qty} units`);
+  if(m.qty<=m.reorder) addNotif(`Low stock: ${m.name} (${m.qty} units remaining)`,'warning','Pharmacy');
+  toast('Stock Updated',`${m.name}: ${m.qty} units`,'success',()=>{ m.qty=prev; renderPharm(); });
+  renderPharm(); saveState();
+}
+function addStock(){
+  const name=$('st-name').value.trim(), qty=parseInt($('st-qty').value), expiry=$('st-expiry').value;
+  if(!name||isNaN(qty)||qty<1||!expiry){ toast('Missing fields','Name, quantity and expiry are required.','error'); return; }
+  if(new Date(expiry)<new Date()){ toast('Invalid expiry','Expiry date is in the past.','error'); return; }
+  const code='MED-'+String(S.pharmacy.length+1).padStart(4,'0');
+  S.pharmacy.push({code,name,generic:$('st-generic').value,cat:$('st-cat').value,form:$('st-form').value,str:$('st-str').value,qty,price:parseInt($('st-price').value)||0,reorder:parseInt($('st-reorder').value)||50,batch:$('st-batch').value||`BTC-${new Date().getFullYear()}-${String(S.pharmacy.length+1).padStart(3,'0')}`,expiry,sup:$('st-sup').value,branch:S.branch});
+  logAudit('Pharmacy','stock_added',code,`${name} — ${qty} units`);
+  closeModal('modal-stock');
+  toast('Stock Added',`${name} (${code}) · ${qty} units`,'success');
+  renderPharm(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// PRESCRIPTIONS
+// ════════════════════════════════════════════════════════════
+function renderRxs(statusF=''){
+  let list=[...S.prescriptions].reverse();
+  if(statusF) list=list.filter(r=>r.status===statusF);
+  $('rx-table').innerHTML=list.map(r=>`
+    <tr>
+      <td><strong>${r.rxNo}</strong></td><td>${ptName(r.pid)}</td><td>${drName(r.did)}</td><td>${r.date}</td>
+      <td style="font-size:.78rem">${r.meds.map(m=>esc(m.name)).join(', ')}</td>
+      <td><span class="badge ${statusBadge(r.status)}">${r.status}</span></td>
+      <td style="white-space:nowrap">
+        ${r.status==='Pending'?`<button class="btn btn-xs btn-teal" onclick="dispenseRx('${r.rxNo}')">Dispense</button> `:''}
+        <button class="btn btn-xs btn-outline" onclick="printRx('${r.rxNo}')">Print</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📋</div><h3>No prescriptions</h3></div></td></tr>';
+}
+function filterRx(v){ renderRxs(v); }
+function prepRxModal(){
+  $('rx-pt').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('rx-dr').innerHTML='<option value="">Select doctor</option>'+S.staff.filter(s=>s.role==='Doctor').map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  $('rx-con').innerHTML='<option value="">Select consultation (required)</option>'+S.consultations.map(c=>`<option value="${c.ref}">${c.ref} — ${ptName(c.pid)} — ${esc(c.diag||'No diagnosis')}</option>`).join('');
+  $('rx-items').innerHTML=''; addRxRow();
+  $('err-rx').style.display='none';
+}
+function addRxRow(){
+  const d=$('rx-items'); const row=document.createElement('div');
+  row.className='rx-row'; row.style='display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:7px;margin-bottom:8px;align-items:end';
+  row.innerHTML=`
+    <div><label class="form-label">Medicine</label><select class="form-select rx-med"><option value="">Select</option>${S.pharmacy.filter(m=>m.qty>0).map(m=>`<option value="${m.name}">${esc(m.name)} (${m.qty})</option>`).join('')}</select></div>
+    <div><label class="form-label">Dosage</label><input class="form-input" placeholder="e.g. 1 tablet"></div>
+    <div><label class="form-label">Frequency</label><select class="form-select"><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Four times daily</option><option>As needed</option><option>Stat (once)</option></select></div>
+    <div><label class="form-label">Duration</label><input class="form-input" placeholder="e.g. 7 days"></div>
+    <div style="padding-top:16px"><button class="btn btn-danger btn-xs" onclick="this.closest('.rx-row').remove()">✕</button></div>`;
+  d.appendChild(row);
+}
+function issueRx(){
+  const pid=$('rx-pt').value, did=$('rx-dr').value, conRef=$('rx-con').value;
+  const err=$('err-rx'); err.style.display='none';
+  if(!pid||!did){ err.textContent='Patient and doctor are required.'; err.style.display='flex'; return; }
+  if(!conRef){ err.textContent='A prescription must be linked to a consultation record. Please create a consultation first, then return here.'; err.style.display='flex'; return; }
+  const rows=document.querySelectorAll('.rx-row');
+  const meds=[];
+  for(const row of rows){
+    const sels=row.querySelectorAll('select,input');
+    const med=sels[0].value; if(!med) continue;
+    meds.push({name:med,dose:sels[1].value||'As directed',freq:sels[2].value,dur:sels[3].value||'As directed'});
+  }
+  if(!meds.length){ err.textContent='Add at least one medicine to the prescription.'; err.style.display='flex'; return; }
+  const rxNo='RX-'+String(S.ids.rx++).padStart(4,'0');
+  S.prescriptions.push({rxNo,pid,did,conRef,meds,notes:$('rx-notes').value,status:'Pending',date:fmtDate(new Date()),branch:S.branch});
+  logAudit('Pharmacy','prescription_issued',rxNo,`For ${ptName(pid)} — ${meds.map(m=>m.name).join(', ')}`);
+  addNotif(`Prescription ${rxNo} issued for ${ptName(pid)}`,'info','Pharmacy');
+  closeModal('modal-rx');
+  toast('Prescription Issued',rxNo,'success');
+  renderRxs(); saveState();
+}
+function dispenseRx(rxNo){
+  const rx=S.prescriptions.find(r=>r.rxNo===rxNo); if(!rx) return;
+  for(const med of rx.meds){
+    const stock=S.pharmacy.find(m=>m.name===med.name);
+    if(stock){ if(stock.qty<1){ toast('Out of stock',`${med.name} has 0 units. Cannot dispense.`,'error'); return; } stock.qty--; }
+  }
+  rx.status='Dispensed';
+  logAudit('Pharmacy','prescription_dispensed',rxNo,`Dispensed to ${ptName(rx.pid)}`);
+  toast('Dispensed',rxNo,'success');
+  renderRxs(); renderPharm();
+  if($('view-dispensing').classList.contains('active')) renderDisp();
+  saveState();
+}
+function printRx(rxNo){
+  const rx=S.prescriptions.find(r=>r.rxNo===rxNo); if(!rx) return;
+  const p=S.patients.find(x=>x.id===rx.pid);
+  $('invoice-body').innerHTML=`<div class="invoice-paper">
+    <div class="inv-header">
+      <div><div class="inv-title">🏥 MediCore Pro</div><div style="font-size:.82rem;color:#64748b">${esc(S.settings.hospitalName)}<br>${esc(S.branches[S.branch].name)}<br>${S.branches[S.branch].phone}</div></div>
+      <div style="text-align:right"><div style="font-size:1.2rem;font-weight:800;color:#1a6faa">PRESCRIPTION</div><div style="font-size:.82rem;color:#64748b">${rx.rxNo}<br>Date: ${rx.date}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;font-size:.84rem">
+      <div><strong>Patient:</strong> ${p?esc(p.fname+' '+p.lname):rx.pid}<br><strong>Age/Sex:</strong> ${p?p.age+'y / '+p.sex:'—'}<br><strong>⚠ Allergies:</strong> <span style="color:#dc2626">${p?p.allergy:'—'}</span></div>
+      <div><strong>Prescribing Doctor:</strong> ${drName(rx.did)}<br><strong>Consultation Ref:</strong> ${rx.conRef}<br><strong>Status:</strong> ${rx.status}</div>
+    </div>
+    <table class="inv-table"><thead><tr><th>Medicine</th><th>Dosage</th><th>Frequency</th><th>Duration</th></tr></thead>
+    <tbody>${rx.meds.map(m=>`<tr><td><strong>${esc(m.name)}</strong></td><td>${esc(m.dose)}</td><td>${esc(m.freq)}</td><td>${esc(m.dur)}</td></tr>`).join('')}</tbody></table>
+    ${rx.notes?`<div style="margin-top:12px;background:#f8fafc;padding:10px;border-radius:6px;font-size:.82rem"><strong>Notes:</strong> ${esc(rx.notes)}</div>`:''}
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.78rem;color:#94a3b8;text-align:center">
+      <div style="border-top:1px solid #e2e8f0;padding-top:8px">Prescribing Doctor's Signature & Stamp</div>
+      <div style="border-top:1px solid #e2e8f0;padding-top:8px">Dispensed by / Date</div>
+    </div>
+    <div style="margin-top:14px;text-align:center;font-size:.71rem;color:#94a3b8">Monalisa Tech Solutions · kabuusumonalisa@gmail.com · +256703953711</div>
+  </div>`;
+  $('modal-invoice').querySelector('.modal-title').textContent='Prescription — '+rxNo;
+  openModal('modal-invoice');
+}
+
+// ════════════════════════════════════════════════════════════
+// DISPENSING
+// ════════════════════════════════════════════════════════════
+function renderDisp(){
+  const pend=S.prescriptions.filter(r=>r.status==='Pending');
+  $('disp-table').innerHTML=pend.map(r=>`
+    <tr>
+      <td><strong>${r.rxNo}</strong></td><td>${ptName(r.pid)}</td>
+      <td style="font-size:.78rem">${r.meds.map(m=>`${esc(m.name)} — ${m.dose} ${m.freq}`).join('<br>')}</td>
+      <td>${drName(r.did)}</td><td>${r.date}</td>
+      <td><span class="badge badge-warning">Pending</span></td>
+      <td><button class="btn btn-sm btn-teal" onclick="dispenseRx('${r.rxNo}');renderDisp()">Dispense Now</button></td>
+    </tr>`).join('')||'<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🏷️</div><h3>No prescriptions pending</h3><p>All prescriptions have been dispensed.</p></div></td></tr>';
+}
+
+// ════════════════════════════════════════════════════════════
+// BILLING
+// ════════════════════════════════════════════════════════════
+function renderBilling(statusF=''){
+  const col=S.billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0);
+  const pend=S.billing.filter(b=>b.status==='Pending').reduce((s,b)=>s+b.amount,0);
+  $('bill-col').textContent=fmtUGX(col); $('bill-pend').textContent=fmtUGX(pend); $('bill-cnt').textContent=S.billing.length;
+  let list=[...S.billing].reverse();
+  if(statusF) list=list.filter(b=>b.status===statusF);
+  $('billing-table').innerHTML=list.map(b=>`
+    <tr>
+      <td><strong>${b.inv}</strong></td><td>${ptName(b.pid)}</td>
+      <td style="font-size:.78rem;max-width:160px">${esc(b.svc)}</td>
+      <td><strong>UGX ${fmt(b.amount)}</strong></td><td style="font-size:.8rem">${b.method}</td><td>${b.date}</td>
+      <td><span class="badge ${statusBadge(b.status)}">${b.status}</span></td>
+      <td style="white-space:nowrap">
+        ${b.status==='Pending'?`<button class="btn btn-xs btn-success" onclick="markPaid('${b.inv}')">Mark Paid</button> `:''}
+        <button class="btn btn-xs btn-outline" onclick="showInvoice('${b.inv}')">Print</button>
+      </td>
+    </tr>`).join('')||'<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">💳</div><h3>No invoices found</h3></div></td></tr>';
+}
+function filterBill(v){ renderBilling(v); }
+function markPaid(inv){
+  const b=S.billing.find(x=>x.inv===inv); if(!b) return;
+  const prev=b.status; b.status='Paid';
+  logAudit('Finance','invoice_paid',inv,`UGX ${fmt(b.amount)} — ${ptName(b.pid)}`);
+  toast('Payment Recorded',`${inv} · UGX ${fmt(b.amount)}`,'success',()=>{ b.status=prev; renderBilling(); });
+  renderBilling(); renderDash(); saveState();
+}
+function prepBillModal(){
+  $('b-pt').innerHTML='<option value="">Select patient</option>'+S.patients.map(p=>`<option value="${p.id}">${p.id} — ${p.fname} ${p.lname}</option>`).join('');
+  $('bill-rows').innerHTML=''; addBillRow(); recalcBill();
+}
+function addBillRow(){
+  const d=$('bill-rows'); const row=document.createElement('div');
+  row.className='bill-row'; row.style='display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:7px;margin-bottom:8px;align-items:end';
+  row.innerHTML=`
+    <div><label class="form-label">Service</label><select class="form-select bill-svc" onchange="syncBillAmt(this)">
+      <option value="30000">Consultation — 30,000</option><option value="80000">Specialist Consultation — 80,000</option>
+      <option value="15000">Lab Test (Basic) — 15,000</option><option value="50000">Lab Panel — 50,000</option>
+      <option value="25000">X-Ray — 25,000</option><option value="120000">Ultrasound — 120,000</option>
+      <option value="200000">Minor Surgery — 200,000</option><option value="500000">Major Surgery — 500,000</option>
+      <option value="150000">ICU/Day — 150,000</option><option value="10000">Nursing Care/Day — 10,000</option>
+      <option value="20000">Dressing & Wound Care — 20,000</option>
+    </select></div>
+    <div><label class="form-label">Qty</label><input class="form-input bill-qty" type="number" value="1" min="1" oninput="recalcBill()"></div>
+    <div><label class="form-label">Unit (UGX)</label><input class="form-input bill-amt" type="number" value="30000" oninput="recalcBill()"></div>
+    <div style="padding-top:16px"><button class="btn btn-danger btn-xs" onclick="this.closest('.bill-row').remove();recalcBill()">✕</button></div>`;
+  d.appendChild(row);
+}
+function syncBillAmt(sel){ const r=sel.closest('.bill-row'); r.querySelector('.bill-amt').value=sel.value; recalcBill(); }
+function recalcBill(){ let t=0; document.querySelectorAll('.bill-row').forEach(r=>{ t+=(parseInt(r.querySelector('.bill-qty')?.value)||1)*(parseInt(r.querySelector('.bill-amt')?.value)||0); }); $('bill-total').textContent=fmt(t); }
+function createBill(){
+  const pid=$('b-pt').value;
+  if(!pid){ toast('Required','Select a patient.','error'); return; }
+  let total=0; const svcs=[];
+  document.querySelectorAll('.bill-row').forEach(r=>{
+    const s=r.querySelector('.bill-svc'); const lbl=s.options[s.selectedIndex].text.split('—')[0].trim();
+    const qty=parseInt(r.querySelector('.bill-qty')?.value)||1, amt=parseInt(r.querySelector('.bill-amt')?.value)||0;
+    total+=qty*amt; if(lbl) svcs.push(qty>1?`${qty}×${lbl}`:lbl);
+  });
+  if(total===0){ toast('Invalid','Total cannot be zero.','error'); return; }
+  const inv='INV-'+String(S.ids.bill++).padStart(5,'0');
+  S.billing.push({inv,pid,svc:svcs.join(', '),amount:total,method:$('b-method').value,status:'Pending',date:fmtDate(new Date()),branch:S.branch});
+  logAudit('Finance','billing_created',inv,`${ptName(pid)} — UGX ${fmt(total)}`);
+  closeModal('modal-bill');
+  toast('Invoice Created',`${inv} · UGX ${fmt(total)}`,'success');
+  renderBilling(); saveState();
+}
+function showInvoice(inv){
+  const b=S.billing.find(x=>x.inv===inv); if(!b) return;
+  const p=S.patients.find(x=>x.id===b.pid);
+  $('invoice-body').innerHTML=`<div class="invoice-paper">
+    <div class="inv-header">
+      <div><div class="inv-title">🏥 MediCore Pro</div><div style="font-size:.82rem;color:#64748b">${esc(S.settings.hospitalName)}<br>${esc(S.branches[S.branch].name)}<br>${S.branches[S.branch].phone}</div></div>
+      <div style="text-align:right"><div style="font-size:1.4rem;font-weight:800;color:#1a6faa">INVOICE</div><div style="font-size:.82rem;color:#64748b">${b.inv}<br>Date: ${b.date}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;font-size:.84rem">
+      <div><strong>Bill To:</strong><br>${p?esc(p.fname+' '+p.lname):b.pid}<br>${p?p.phone:''}</div>
+      <div><strong>Payment Method:</strong> ${b.method}<br><strong>Status:</strong> <strong style="color:${b.status==='Paid'?'#16a34a':'#d97706'}">${b.status}</strong></div>
+    </div>
+    <table class="inv-table"><thead><tr><th>Description</th><th style="text-align:right">Amount (UGX)</th></tr></thead>
+    <tbody>${b.svc.split(',').map(s=>`<tr><td>${esc(s.trim())}</td><td style="text-align:right">—</td></tr>`).join('')}
+    <tr style="background:#f8fafc"><td><strong>TOTAL DUE</strong></td><td style="text-align:right"><strong>UGX ${fmt(b.amount)}</strong></td></tr>
+    </tbody></table>
+    <div style="margin-top:16px;text-align:center;font-size:.72rem;color:#94a3b8">Thank you for choosing ${esc(S.settings.hospitalName)} · Monalisa Tech Solutions · kabuusumonalisa@gmail.com · +256703953711</div>
+  </div>`;
+  $('modal-invoice').querySelector('.modal-title').textContent='Invoice — '+inv;
+  openModal('modal-invoice');
+}
+
+// ════════════════════════════════════════════════════════════
+// STAFF
+// ════════════════════════════════════════════════════════════
+function renderStaff(roleF=''){
+  let list=roleF?S.staff.filter(s=>s.role===roleF):S.staff;
+  $('staff-table').innerHTML=list.map(s=>`
+    <tr>
+      <td><strong>${s.id}</strong></td><td><strong>${esc(s.name)}</strong></td>
+      <td><span class="badge badge-primary">${s.role}</span></td>
+      <td style="font-size:.8rem">${s.spec||'—'}</td><td>${s.dept}</td>
+      <td><span class="badge badge-gray">${s.branch}</span></td>
+      <td style="font-size:.8rem">${s.phone}</td>
+      <td><span class="badge badge-success">${s.status||'Active'}</span></td>
+      <td><button class="btn btn-xs btn-outline" onclick="viewStaff('${s.id}')">View</button></td>
+    </tr>`).join('')||'<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">👥</div><h3>No staff records</h3></div></td></tr>';
+}
+function filterStaff(v){ renderStaff(v); }
+function viewStaff(id){
+  var s=S.staff.find(function(x){return x.id===id;}); if(!s) return;
+  alert('STAFF RECORD\n\nID: '+s.id+'\nName: '+s.name+'\nRole: '+s.role+'\nSpecialization: '+(s.spec||'—')+'\nDepartment: '+s.dept+'\nBranch: '+s.branch+'\nPhone: '+s.phone+'\nEmail: '+(s.email||'—')+'\nLicense: '+(s.lic||'N/A')+'\nStatus: '+s.status);
+}
+function addStaff(){
+  const name=$('sf-name').value.trim(), role=$('sf-role').value;
+  if(!name||!role){ toast('Required','Name and role are required.','error'); return; }
+  const id='STF-'+String(S.ids.staff++).padStart(3,'0');
+  S.staff.push({id,name,role,spec:$('sf-spec').value,dept:$('sf-dept').value,branch:$('sf-branch').value,phone:$('sf-ph').value,email:$('sf-em').value,lic:$('sf-lic').value,status:'Active'});
+  logAudit('ERP','staff_added',id,`${name} — ${role}`);
+  closeModal('modal-staff');
+  toast('Staff Added',`${name} (${id})`,'success');
+  renderStaff(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// BRANCHES
+// ════════════════════════════════════════════════════════════
+function renderBranches(){
+  $('branches-grid').innerHTML=S.branches.map(b=>{
+    const pts=S.patients.filter(p=>p.branch===b.id).length;
+    const st=S.staff.filter(s=>s.branch===b.name).length;
+    const rev=S.billing.filter(x=>x.branch===b.id&&x.status==='Paid').reduce((s,x)=>s+x.amount,0);
+    const appts=S.appointments.filter(a=>a.branch===b.id).length;
+    return `<div class="card">
+      <div class="card-header"><div><div class="card-title">${esc(b.name)}</div><div style="font-size:.72rem;color:var(--gray-500)">${b.location} · ${b.type}</div></div><span class="badge badge-success">Active</span></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">
+          <div class="vital-box"><div class="vital-label">Patients</div><div class="vital-value" style="font-size:1.25rem">${pts}</div></div>
+          <div class="vital-box"><div class="vital-label">Staff</div><div class="vital-value" style="font-size:1.25rem">${st}</div></div>
+          <div class="vital-box"><div class="vital-label">Appointments</div><div class="vital-value" style="font-size:1.25rem">${appts}</div></div>
+          <div class="vital-box"><div class="vital-label">Revenue</div><div class="vital-value" style="font-size:.82rem">${fmt(rev)}</div></div>
+        </div>
+        <div style="font-size:.78rem;color:var(--gray-600);line-height:1.8">
+          <div>📞 ${b.phone}</div><div>👤 ${b.manager}</div><div>⚕️ ${b.services}</div>
+        </div>
+        <button class="btn btn-sm btn-outline" style="margin-top:10px;width:100%" onclick="$('branch-select').value=${b.id};switchBranch(${b.id})">Switch to this branch</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function addBranch(){
+  const name=$('br-name').value.trim(), loc=$('br-loc').value.trim();
+  if(!name||!loc){ toast('Required','Branch name and location are required.','error'); return; }
+  const id=S.ids.branch++;
+  S.branches.push({id,name,type:$('br-type').value,location:loc,phone:$('br-ph').value,manager:$('br-mgr').value,services:$('br-svc').value||'General Services',active:true});
+  const sel=$('branch-select'); const opt=document.createElement('option');
+  opt.value=id; opt.textContent='🏥 '+name; sel.appendChild(opt);
+  logAudit('ERP','branch_added',String(id),name+' — '+loc);
+  closeModal('modal-branch');
+  toast('Branch Added',name,'success');
+  renderBranches(); saveState();
+}
+
+// ════════════════════════════════════════════════════════════
+// REPORTS
+// ════════════════════════════════════════════════════════════
+function renderReports(){
+  const totRev=S.billing.reduce((s,b)=>s+b.amount,0);
+  const colRev=S.billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0);
+  const male=S.patients.filter(p=>p.sex==='Male').length, female=S.patients.filter(p=>p.sex==='Female').length;
+  $('rpt-patients').innerHTML=`<div style="font-size:2rem;font-weight:800;margin-bottom:4px">${S.patients.length}</div>
+    <div style="font-size:.78rem;color:var(--gray-500);margin-bottom:14px">Total registered patients</div>
+    ${[['Male',male,'var(--primary)'],['Female',female,'var(--teal)'],['Active',S.patients.filter(p=>p.status==='Active').length,'var(--success)'],['Admitted',S.patients.filter(p=>p.status==='Admitted').length,'var(--warning)'],['Discharged',S.patients.filter(p=>p.status==='Discharged').length,'var(--gray-500)']].map(([l,v,c])=>`
+      <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:3px"><span>${l}</span><strong>${v}</strong></div>
+      <div class="progress"><div class="progress-bar" style="width:${S.patients.length?Math.round(v/S.patients.length*100):0}%;background:${c}"></div></div></div>`).join('')}`;
+  $('rpt-revenue').innerHTML=`<div style="font-size:1.8rem;font-weight:800;color:var(--success);margin-bottom:4px">UGX ${fmt(colRev)}</div>
+    <div style="font-size:.78rem;color:var(--gray-500);margin-bottom:12px">Collected</div>
+    ${[['Total Invoiced','UGX '+fmt(totRev),'var(--gray-700)'],['Outstanding','UGX '+fmt(totRev-colRev),'var(--danger)'],['Collection Rate',totRev?Math.round(colRev/totRev*100)+'%':'—','var(--success)'],['Total Invoices',S.billing.length,'var(--primary)'],['Paid Invoices',S.billing.filter(b=>b.status==='Paid').length,'var(--success)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:7px 0;border-bottom:1px solid var(--gray-100)"><span style="color:var(--gray-600)">${l}</span><strong style="color:${c}">${v}</strong></div>`).join('')}`;
+  $('rpt-appts').innerHTML=[['Total',S.appointments.length,'var(--gray-700)'],['Completed',S.appointments.filter(a=>a.status==='Completed').length,'var(--success)'],['Scheduled',S.appointments.filter(a=>a.status==='Scheduled').length,'var(--primary)'],['In Progress',S.appointments.filter(a=>a.status==='In Progress').length,'var(--teal)'],['Cancelled',S.appointments.filter(a=>a.status==='Cancelled').length,'var(--danger)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:7px 0;border-bottom:1px solid var(--gray-100)"><span>${l}</span><strong style="color:${c}">${v}</strong></div>`).join('');
+  $('rpt-pharm').innerHTML=[['Total Medicines',S.pharmacy.length,'var(--gray-700)'],['In Stock',S.pharmacy.filter(m=>m.qty>m.reorder).length,'var(--success)'],['Low Stock',S.pharmacy.filter(m=>m.qty>0&&m.qty<=m.reorder).length,'var(--warning)'],['Out of Stock',S.pharmacy.filter(m=>m.qty===0).length,'var(--danger)'],['Prescriptions',S.prescriptions.length,'var(--primary)'],['Dispensed',S.prescriptions.filter(r=>r.status==='Dispensed').length,'var(--teal)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:7px 0;border-bottom:1px solid var(--gray-100)"><span>${l}</span><strong style="color:${c}">${v}</strong></div>`).join('');
+  setTimeout(drawMonthlyChart,60);
+}
+function exportCSV(){
+  const rows=[['ID','Name','DOB','Age','Sex','Blood','Phone','Allergies','Status','Registered','Branch']];
+  S.patients.forEach(p=>rows.push([p.id,`${p.fname} ${p.lname}`,p.dob,p.age,p.sex,p.blood,p.phone,p.allergy,p.status,p.regDate,S.branches[p.branch]?.name||p.branch]));
+  const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`medicore_patients_${fmtDate(new Date())}.csv`; a.click();
+  toast('Exported','Patient data downloaded as CSV.','success');
+}
+
+// ════════════════════════════════════════════════════════════
+// AUDIT
+// ════════════════════════════════════════════════════════════
+let _auditQ='';
+function renderAudit(){
+  let list=S.auditLog;
+  if(_auditQ) list=list.filter(a=>(a.action+a.mod+a.details+a.recId+a.user).toLowerCase().includes(_auditQ.toLowerCase()));
+  $('audit-table').innerHTML=list.slice(0,150).map(a=>`
+    <tr>
+      <td>${a.n}</td><td style="white-space:nowrap;font-size:.76rem">${a.ts}</td>
+      <td style="font-weight:600;font-size:.81rem">${a.user}</td>
+      <td><span class="badge badge-gray">${a.mod}</span></td>
+      <td style="font-size:.79rem">${a.action.replace(/_/g,' ')}</td>
+      <td><code style="font-size:.74rem;background:var(--gray-100);padding:1px 5px;border-radius:3px">${a.recId}</code></td>
+      <td style="font-size:.76rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.details)}</td>
+    </tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--gray-400);padding:20px">No audit entries.</td></tr>';
+}
+function filterAudit(v){ _auditQ=v; renderAudit(); }
+
+// ════════════════════════════════════════════════════════════
+// ANALYTICS
+// ════════════════════════════════════════════════════════════
+function renderAnalytics(){
+  const totRev=S.billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0);
+  $('analytics-content').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon blue">🌍</div><div><div class="stat-value">${S.branches.length}</div><div class="stat-label">Total Branches</div></div></div>
+      <div class="stat-card"><div class="stat-icon teal">👥</div><div><div class="stat-value">${S.staff.length}</div><div class="stat-label">Total Staff</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">💰</div><div><div class="stat-value">${fmt(totRev)}</div><div class="stat-label">Total Revenue (UGX)</div></div></div>
+      <div class="stat-card"><div class="stat-icon amber">🔒</div><div><div class="stat-value">${S.auditLog.length}</div><div class="stat-label">Audit Events</div></div></div>
+    </div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card"><div class="card-header"><span class="card-title">Staff by Role</span></div><div class="card-body">
+        ${['Doctor','Nurse','Pharmacist','Lab Technician','Admin','Receptionist','Accountant'].map(role=>{
+          const n=S.staff.filter(s=>s.role===role).length; if(!n) return '';
+          const pct=Math.round(n/S.staff.length*100);
+          return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:3px"><span>${role}</span><strong>${n} (${pct}%)</strong></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div></div>`;
+        }).join('')}</div></div>
+      <div class="card"><div class="card-header"><span class="card-title">Revenue by Branch</span></div><div class="card-body">
+        ${S.branches.map(b=>{
+          const rev=S.billing.filter(x=>x.branch===b.id&&x.status==='Paid').reduce((s,x)=>s+x.amount,0);
+          const pct=totRev?Math.round(rev/totRev*100):0;
+          return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:3px"><span style="font-size:.79rem">${b.name}</span><strong>UGX ${fmt(rev)}</strong></div><div class="progress"><div class="progress-bar success" style="width:${pct}%"></div></div></div>`;
+        }).join('')}</div></div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════
+// GLOBAL SEARCH
+// ════════════════════════════════════════════════════════════
+let _searchItems=[];
+function globalSearch(q){
+  const results=$('search-results');
+  if(!q||q.length<2){ results.innerHTML=''; results.classList.remove('open'); return; }
+  const lq=q.toLowerCase(); const items=[];
+  S.patients.filter(p=>(p.fname+' '+p.lname+' '+p.id+' '+p.phone).toLowerCase().includes(lq)).slice(0,4).forEach(p=>
+    items.push({ic:'👤',lbl:`${p.fname} ${p.lname}`,sub:`${p.id} · ${p.sex}, ${p.age}y · ${p.blood||'—'}`,tag:'Patient',fn:()=>showPtDetail(p.id)}));
+  S.pharmacy.filter(m=>m.name.toLowerCase().includes(lq)||m.generic.toLowerCase().includes(lq)).slice(0,3).forEach(m=>
+    items.push({ic:'💊',lbl:m.name,sub:`${m.qty} units · ${m.cat}`,tag:'Medicine',fn:()=>nav('pharmacy')}));
+  S.staff.filter(s=>s.name.toLowerCase().includes(lq)).slice(0,3).forEach(s=>
+    items.push({ic:'👥',lbl:s.name,sub:`${s.role} · ${s.dept}`,tag:'Staff',fn:()=>nav('staff')}));
+  S.prescriptions.filter(r=>r.rxNo.toLowerCase().includes(lq)||ptName(r.pid).toLowerCase().includes(lq)).slice(0,2).forEach(r=>
+    items.push({ic:'📋',lbl:r.rxNo,sub:`${ptName(r.pid)} · ${r.status}`,tag:'Prescription',fn:()=>nav('prescriptions')}));
+  S.billing.filter(b=>b.inv.toLowerCase().includes(lq)||ptName(b.pid).toLowerCase().includes(lq)).slice(0,2).forEach(b=>
+    items.push({ic:'💳',lbl:b.inv,sub:`${ptName(b.pid)} · UGX ${fmt(b.amount)}`,tag:'Invoice',fn:()=>nav('billing')}));
+  _searchItems=items;
+  if(!items.length){ results.innerHTML='<div class="search-item" style="color:var(--gray-400);font-size:.82rem">No results for "'+esc(q)+'"</div>'; results.classList.add('open'); return; }
+  results.innerHTML=items.map((item,i)=>`
+    <div class="search-item" onclick="_searchItems[${i}].fn();$('search-results').classList.remove('open');$('global-search').value=''">
+      <span style="font-size:1.1rem">${item.ic}</span>
+      <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.82rem">${esc(item.lbl)}</div><div style="font-size:.73rem;color:var(--gray-400)">${esc(item.sub)}</div></div>
+      <span class="search-tag">${item.tag}</span>
+    </div>`).join('');
+  results.classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════════
+// EMAIL SIMULATION
+// ════════════════════════════════════════════════════════════
+function switchEmailTab(el,tab){
+  document.querySelectorAll('#modal-email .panel-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); renderEmailTab(tab);
+}
+function renderEmailTab(tab){
+  const body=$('email-tab-body'); if(!body) return;
+  if(tab==='inbox'){
+    const unread=S.emails.inbox.filter(e=>!e.read).length;
+    const cnt=$('inbox-count'); if(cnt) cnt.textContent=unread;
+    body.innerHTML=S.emails.inbox.map(e=>`
+      <div class="email-item ${e.read?'':'unread'}" onclick="readEmail('${e.id}')">
+        <div style="display:flex;justify-content:space-between;gap:8px">
+          <div class="email-from">${esc(e.from)}</div>
+          <div class="email-time">${e.time}</div>
+        </div>
+        <div class="email-subject">${esc(e.subject)}</div>
+      </div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:.82rem">Inbox is empty</div>';
+  } else if(tab==='compose'){
+    body.innerHTML=`<div style="display:flex;flex-direction:column;gap:11px;padding:4px">
+      <div><label class="form-label">To</label><input class="form-input" id="em-to" placeholder="recipient@example.com"></div>
+      <div><label class="form-label">Subject</label><input class="form-input" id="em-subj" placeholder="Email subject"></div>
+      <div><label class="form-label">Message</label><textarea class="form-textarea" id="em-body" style="min-height:140px" placeholder="Type your message here…"></textarea></div>
+      <button class="btn btn-primary" onclick="sendEmail()">Send Message ✉️</button>
+    </div>`;
+  } else if(tab==='sent'){
+    body.innerHTML=S.emails.sent.map(e=>`
+      <div class="email-item">
+        <div style="display:flex;justify-content:space-between;gap:8px">
+          <div class="email-from">To: ${esc(e.to)}</div>
+          <div class="email-time">${e.time}</div>
+        </div>
+        <div class="email-subject">${esc(e.subject)}</div>
+      </div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:.82rem">No sent messages</div>';
+  }
+}
+function readEmail(id){
+  const e=S.emails.inbox.find(x=>x.id===id); if(!e) return;
+  e.read=true;
+  alert(`FROM: ${e.from}\nSUBJECT: ${e.subject}\n\n${e.body}`);
+  renderEmailTab('inbox');
+}
+function sendEmail(){
+  const to=$('em-to')?.value.trim(), subj=$('em-subj')?.value.trim(), body=$('em-body')?.value.trim();
+  if(!to||!subj||!body){ toast('Required','Fill in all email fields.','error'); return; }
+  S.emails.sent.unshift({to,subject:subj,body,time:tsNow()});
+  logAudit('Email','email_sent','',`To: ${to} — ${subj}`);
+  $('em-to').value=''; $('em-subj').value=''; $('em-body').value='';
+  toast('Email Sent','Delivered to '+to,'success');
+  renderEmailTab('sent');
+}
+
+// ════════════════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════════════════
+function saveSettings(){
+  S.settings.hospitalName=$('s-name').value||S.settings.hospitalName;
+  S.settings.threshold=parseInt($('s-threshold').value)||50;
+  logAudit('System','settings_updated','SYS','Hospital settings saved');
+  toast('Settings Saved','Configuration updated.','success');
+  saveState();
+}
+function sendSupportMsg(){
+  const msg=$('support-msg')?.value.trim();
+  if(!msg){ toast('Empty message','Please type your support request.','error'); return; }
+  S.emails.sent.unshift({to:'kabuusumonalisa@gmail.com',subject:'Support Request from MediCore Pro',body:msg,time:tsNow()});
+  logAudit('System','support_request_sent','',msg.substring(0,60));
+  $('support-msg').value='';
+  toast('Request Sent','Our team will respond shortly.','success');
+}
+function exportFullBackup(){
+  const data=JSON.stringify({exportDate:tsNow(),version:'2.0',data:{patients:S.patients,appointments:S.appointments,consultations:S.consultations,labTests:S.labTests,nursingLogs:S.nursingLogs,prescriptions:S.prescriptions,pharmacy:S.pharmacy,billing:S.billing,staff:S.staff,auditLog:S.auditLog.slice(0,100)}},null,2);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+  a.download=`medicore_backup_${fmtDate(new Date())}.json`; a.click();
+  toast('Backup Exported','Full system backup downloaded.','success');
+}
+function confirmReset(){
+  if(confirm('Reset all data to demo defaults?\n\nThis will clear all records you have added. The action cannot be undone.')){
+    localStorage.removeItem('medicore_v2');
+    location.reload();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// CHATBOT — DEEP INTENT ENGINE
+// ════════════════════════════════════════════════════════════
+let _chatOpen=false;
+function toggleChat(){
+  _chatOpen=!_chatOpen;
+  $('chatbot-panel').classList.toggle('open',_chatOpen);
+  $('chat-dot').style.display='none';
+  if(_chatOpen&&$('chat-msgs').children.length===0) initChat();
+}
+function initChat(){
+  $('chat-msgs').innerHTML='';
+  botMsg(`Hello! I'm Medi Assistant — your MediCore Pro AI helper.\n\nPowered by Monalisa Tech Solutions.\n\nI can search patients, check stock levels, review appointments, summarise revenue, and navigate the system for you. Just ask naturally.`,[
+    'Show dashboard summary','Today\'s appointments','Check low stock','How many patients?'
+  ]);
+}
+function botMsg(text,suggests=[]){
+  const c=$('chat-msgs');
+  const div=document.createElement('div');
+  div.className='chat-msg bot';
+  div.innerHTML=`<div class="chat-bubble">${esc(text).replace(/\n/g,'<br>')}</div>
+    ${suggests.length?`<div class="chat-suggests">${suggests.map(s=>`<button class="chat-sug" onclick="handleSug('${esc(s).replace(/'/g,"\\'")}')">${esc(s)}</button>`).join('')}</div>`:''}
+    <div class="chat-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
+  c.appendChild(div); c.scrollTop=c.scrollHeight;
+}
+function userMsg(text){
+  const c=$('chat-msgs');
+  const div=document.createElement('div');
+  div.className='chat-msg user';
+  div.innerHTML=`<div class="chat-bubble">${esc(text)}</div><div class="chat-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
+  c.appendChild(div); c.scrollTop=c.scrollHeight;
+}
+function handleSug(text){ $('chat-in').value=text; sendChat(); }
+function sendChat(){
+  const inp=$('chat-in'), text=inp.value.trim(); if(!text) return;
+  inp.value=''; userMsg(text);
+  logAudit('Chatbot','chatbot_message_sent','',text.substring(0,60));
+  setTimeout(()=>{
+    const r=chatRespond(text.toLowerCase());
+    botMsg(r.text,r.sug||[]);
+  },380);
+}
+function chatRespond(q){
+  const td=fmtDate(new Date());
+  const todayA=S.appointments.filter(a=>a.date===td&&a.branch===S.branch);
+  const pendA=S.appointments.filter(a=>a.status==='Scheduled'&&a.branch===S.branch);
+  const lowSt=S.pharmacy.filter(m=>m.qty<=m.reorder&&m.branch===S.branch);
+  const pendL=S.labTests.filter(l=>l.status==='Pending');
+  const rev=S.billing.filter(b=>b.status==='Paid').reduce((s,b)=>s+b.amount,0);
+  const pendRev=S.billing.filter(b=>b.status==='Pending').reduce((s,b)=>s+b.amount,0);
+
+  // Dashboard / summary
+  if(/dashboard|summary|overview|snapshot/.test(q)) return {text:`📊 Dashboard — ${S.branches[S.branch].name}\n\n• Patients: ${S.patients.length} registered\n• Today's appointments: ${todayA.length}\n• Pending appointments: ${pendA.length}\n• Pending lab tests: ${pendL.length}\n• Low stock items: ${lowSt.length}\n• Revenue collected: UGX ${fmt(rev)}\n• Outstanding: UGX ${fmt(pendRev)}\n• Active staff: ${S.staff.length}`,sug:['Show low stock','Today\'s appointments','Pending labs','Revenue breakdown']};
+
+  // Patient count
+  if(/how many patient|patient count|total patient/.test(q)) return {text:`There are ${S.patients.length} patients in the system across all branches.\n\nBreakdown by status:\n• Active: ${S.patients.filter(p=>p.status==='Active').length}\n• Admitted: ${S.patients.filter(p=>p.status==='Admitted').length}\n• Discharged: ${S.patients.filter(p=>p.status==='Discharged').length}`,sug:['Register new patient','Show patient list']};
+
+  // Find/search patient
+  if(/find patient|search patient|look up patient/.test(q)){
+    const term=q.replace(/find patient|search patient|look up patient/g,'').trim();
+    if(term.length<2) return {text:'Tell me the patient\'s name or ID. For example: "find patient Emmanuel" or "find patient P001"',sug:[]};
+    const found=S.patients.filter(p=>(p.fname+' '+p.lname+' '+p.id).toLowerCase().includes(term));
+    if(!found.length) return {text:`No patient found matching "${term}". Check the spelling or try a partial name.`,sug:['How many patients?']};
+    return {text:`Found ${found.length} patient(s) for "${term}":\n\n${found.slice(0,5).map(p=>`• ${p.id} — ${p.fname} ${p.lname}, ${p.age}y ${p.sex}, Blood: ${p.blood||'—'}\n  📞 ${p.phone} | Allergies: ${p.allergy}`).join('\n\n')}`,sug:[]};
+  }
+
+  // Patient by ID
+  const idMatch=q.match(/\bp\d{3}\b/i);
+  if(idMatch){
+    const p=S.patients.find(x=>x.id===idMatch[0].toUpperCase());
+    if(p) return {text:`Patient ${p.id} — ${p.fname} ${p.lname}\n\n• Age/Sex: ${p.age}y, ${p.sex}\n• Blood Type: ${p.blood||'Unknown'}\n• Phone: ${p.phone}\n• Allergies: ${p.allergy}\n• Status: ${p.status}\n• History: ${p.history||'None'}\n\nAppointments: ${S.appointments.filter(a=>a.pid===p.id).length} | Labs: ${S.labTests.filter(l=>l.pid===p.id).length} | Prescriptions: ${S.prescriptions.filter(r=>r.pid===p.id).length}`,sug:[]};
+    return {text:`No patient found with ID "${idMatch[0].toUpperCase()}".`,sug:[]};
+  }
+
+  // Today's appointments
+  if(/today.*appoint|appoint.*today|schedule.*today/.test(q)){
+    if(!todayA.length) return {text:'No appointments are scheduled for today.',sug:['Book appointment','Tomorrow\'s appointments']};
+    return {text:`Today's appointments (${todayA.length}):\n\n${todayA.map(a=>`• ${a.time} — ${ptName(a.pid)} with ${drName(a.did)} [${a.status}]\n  Type: ${a.type} | Priority: ${a.pri}`).join('\n\n')}`,sug:['Book appointment','Pending appointments']};
+  }
+
+  // Tomorrow's appointments
+  if(/tomorrow.*appoint|appoint.*tomorrow/.test(q)){
+    const tom=fmtDate(addDays(new Date(),1));
+    const d=S.appointments.filter(a=>a.date===tom);
+    if(!d.length) return {text:'No appointments scheduled for tomorrow.',sug:['Book appointment']};
+    return {text:`Tomorrow's appointments (${d.length}):\n\n${d.map(a=>`• ${a.time} — ${ptName(a.pid)} with ${drName(a.did)} [${a.status}]`).join('\n')}`,sug:[]};
+  }
+
+  // Pending appointments
+  if(/pending appoint|scheduled appoint/.test(q)) return {text:`${pendA.length} appointments are scheduled and waiting:\n\n${pendA.slice(0,8).map(a=>`• ${a.date} ${a.time} — ${ptName(a.pid)} with ${drName(a.did)}`).join('\n')}`,sug:['Book appointment']};
+
+  // Doctor schedule
+  if(/doctor.*schedule|schedule.*doctor|dr\.?\s+\w+|appointments for/.test(q)){
+    const dterm=q.replace(/doctor|schedule|appointments for|dr\.?/g,'').trim();
+    const doc=S.staff.find(s=>s.role==='Doctor'&&s.name.toLowerCase().includes(dterm));
+    if(!doc) return {text:`I could not find a doctor matching "${dterm}". Try "Dr Sarah Nkosi" or "Dr James Oti".`,sug:['List all doctors']};
+    const docAppts=S.appointments.filter(a=>a.did===doc.id).slice(0,6);
+    return {text:`Schedule for ${doc.name} (${doc.spec}):\n\n${docAppts.length?docAppts.map(a=>`• ${a.date} ${a.time} — ${ptName(a.pid)} [${a.status}]`).join('\n'):'No appointments booked.'}`,sug:[]};
+  }
+
+  // List doctors
+  if(/list.*doctor|all doctor|who.*doctor/.test(q)){
+    const docs=S.staff.filter(s=>s.role==='Doctor');
+    return {text:`We have ${docs.length} doctors on staff:\n\n${docs.map(d=>`• ${d.name} — ${d.spec} (${d.branch})`).join('\n')}`,sug:['Book appointment']};
+  }
+
+  // Low stock
+  if(/low stock|stock alert|running low|reorder/.test(q)){
+    if(!lowSt.length) return {text:'All pharmacy items are adequately stocked. No alerts at this time.',sug:['Check expiring medicines']};
+    return {text:`⚠️ ${lowSt.length} item(s) at or below reorder level:\n\n${lowSt.map(m=>`• ${m.name}: ${m.qty} units (reorder at ${m.reorder})`).join('\n')}`,sug:['Check expiring medicines','Go to pharmacy']};
+  }
+
+  // Out of stock
+  if(/out of stock|zero stock|no stock/.test(q)){
+    const out=S.pharmacy.filter(m=>m.qty===0);
+    if(!out.length) return {text:'No medicines are completely out of stock right now.',sug:[]};
+    return {text:`❌ ${out.length} medicine(s) with zero stock:\n\n${out.map(m=>`• ${m.name} — last batch: ${m.batch}`).join('\n')}`,sug:['Go to pharmacy']};
+  }
+
+  // Check specific medicine
+  if(/check.*stock|stock.*of|do we have|how much.*left|quantity of/.test(q)){
+    const cleanQ=q.replace(/check.*stock|stock.*of|do we have|how much.*left|quantity of|for|is there/g,'').trim();
+    const found=S.pharmacy.filter(m=>m.name.toLowerCase().includes(cleanQ)||m.generic.toLowerCase().includes(cleanQ));
+    if(!found.length) return {text:`I could not find "${cleanQ}" in the inventory. Try a generic or brand name like "paracetamol" or "amoxicillin".`,sug:['Show low stock']};
+    return {text:`Stock information for "${cleanQ}":\n\n${found.map(m=>`• ${m.name}\n  Stock: ${m.qty} units | Reorder at: ${m.reorder}\n  Price: UGX ${fmt(m.price)} | Batch: ${m.batch}\n  Expires: ${m.expiry}\n  Status: ${m.qty===0?'❌ Out of Stock':m.qty<=m.reorder?'⚠️ Low Stock':'✅ In Stock'}`).join('\n\n')}`,sug:[]};
+  }
+
+  // Expiring medicines
+  if(/expir/.test(q)){
+    const today2=new Date(), exp90=addDays(today2,90);
+    const expiring=S.pharmacy.filter(m=>{ const d=new Date(m.expiry); return d<=exp90&&d>today2; });
+    const expired=S.pharmacy.filter(m=>new Date(m.expiry)<today2);
+    if(!expiring.length&&!expired.length) return {text:'No medicines are expiring within 90 days.',sug:[]};
+    let text='';
+    if(expired.length) text+=`❌ Already expired (${expired.length}):\n${expired.map(m=>`• ${m.name} — ${m.expiry}`).join('\n')}\n\n`;
+    if(expiring.length) text+=`⚠️ Expiring within 90 days (${expiring.length}):\n${expiring.map(m=>`• ${m.name} — expires ${m.expiry} (${m.qty} units)`).join('\n')}`;
+    return {text,sug:['Go to pharmacy']};
+  }
+
+  // Lab tests
+  if(/lab.*pending|pending.*lab|lab test|test.*result/.test(q)){
+    if(!pendL.length) return {text:'No lab tests are currently pending.',sug:[]};
+    return {text:`Pending lab tests (${pendL.length}):\n\n${pendL.map(l=>`• ${l.id} — ${l.test}\n  Patient: ${ptName(l.pid)} | Priority: ${l.pri}`).join('\n\n')}`,sug:['Go to laboratory']};
+  }
+
+  // Revenue / billing / money
+  if(/revenue|billing|income|money|collections|financial/.test(q)) return {text:`💰 Financial Overview:\n\n• Collected: UGX ${fmt(rev)}\n• Outstanding: UGX ${fmt(pendRev)}\n• Total invoiced: UGX ${fmt(rev+pendRev)}\n• Total invoices: ${S.billing.length}\n• Paid: ${S.billing.filter(b=>b.status==='Paid').length}\n• Pending: ${S.billing.filter(b=>b.status==='Pending').length}\n• Collection rate: ${(rev+pendRev)>0?Math.round(rev/(rev+pendRev)*100):0}%`,sug:['Go to billing','Show reports']};
+
+  // Prescriptions
+  if(/prescription/.test(q)){
+    const pend=S.prescriptions.filter(r=>r.status==='Pending');
+    return {text:`📋 Prescriptions overview:\n\n• Total issued: ${S.prescriptions.length}\n• Pending dispensing: ${pend.length}\n• Dispensed: ${S.prescriptions.filter(r=>r.status==='Dispensed').length}${pend.length?'\n\nPending:\n'+pend.slice(0,5).map(r=>`• ${r.rxNo} — ${ptName(r.pid)}`).join('\n'):''}`,sug:pend.length?['Go to dispensing']:[]};
+  }
+
+  // Navigation
+  if(/go to|open|navigate|take me to|show me/.test(q)){
+    const pages={pharmacy:'pharmacy',patient:'patients',appointment:'appointments',consultation:'consultations',lab:'lab',nursing:'nursing',billing:'billing',staff:'staff',branch:'branches',dashboard:'dashboard',report:'reports',audit:'audit',analytics:'analytics',dispensing:'dispensing'};
+    for(const[key,view] of Object.entries(pages)){
+      if(q.includes(key)){ nav(view); return {text:`Navigating to ${view} now.`,sug:[]}; }
+    }
+  }
+
+  // Register patient
+  if(/register|new patient|add patient/.test(q)){ openModal('modal-patient'); return {text:'Opening the patient registration form.',sug:[]}; }
+
+  // Help
+  if(/help|what can you|guide|commands/.test(q)) return {text:`Here's what I can help with:\n\n🔍 Search — "find patient John"\n📊 Dashboard — "show summary"\n💊 Pharmacy — "check amoxicillin stock"\n📅 Appointments — "today\'s appointments"\n👨‍⚕️ Doctors — "Dr Sarah schedule"\n🧪 Lab — "pending lab tests"\n💰 Finance — "show revenue"\n📋 Prescriptions — "prescription summary"\n🏥 Navigate — "go to pharmacy"\n\nJust type naturally — I understand plain English.`,sug:['Dashboard summary','Today\'s appointments','Low stock alert','Pending labs']};
+
+  // Default
+  return {text:`I'm not sure I understood that. Try asking:\n\n• "find patient [name]"\n• "check [medicine] stock"\n• "today's appointments"\n• "show revenue"\n• "pending lab tests"`,sug:['Help','Dashboard summary','Low stock alert']};
+}
+
+// ════════════════════════════════════════════════════════════
+// PERSISTENCE
+// ════════════════════════════════════════════════════════════
+function saveState(){
+  try{
+    localStorage.setItem('medicore_v2',JSON.stringify({
+      patients:S.patients,appointments:S.appointments,consultations:S.consultations,
+      labTests:S.labTests,nursingLogs:S.nursingLogs,prescriptions:S.prescriptions,
+      pharmacy:S.pharmacy,billing:S.billing,staff:S.staff,branches:S.branches,
+      ids:S.ids,settings:S.settings,
+      auditLog:S.auditLog.slice(0,200),notifications:S.notifications.slice(0,50),
+      emails:S.emails
+    }));
+  }catch(e){ console.warn('Save failed:',e); }
+}
+function loadState(){
+  try{
+    const saved=localStorage.getItem('medicore_v2');
+    if(!saved) return false;
+    const d=JSON.parse(saved);
+    if(d.patients?.length){
+      Object.assign(S,d);
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+// ════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════
+(function boot(){
+  const hasSaved=loadState();
+  if(!hasSaved||!S.patients.length) seed();
+
+  // Default date fields
+  document.querySelectorAll('input[type="date"]').forEach(el=>{ if(!el.value) el.value=fmtDate(new Date()); });
+
+  // Sync badge
+  refreshNotifBadge();
+  updateSyncStatus();
+
+  // Close dropdowns on Escape
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAllDropdowns(); });
+
+  // Enter key on login
+  document.querySelectorAll('.form-control').forEach(el=>{
+    el.addEventListener('keydown',ev=>{ if(ev.key==='Enter'&&el.closest('#ltab-staff')) doLogin(); });
+  });
+
+  // Resize: redraw charts
+  let resizeT;
+  window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ if($('view-dashboard').classList.contains('active')) renderDash(); },300); });
+
+  console.log('%cMediCore Pro v2.0 — Monalisa Tech Solutions', 'color:#1a6faa;font-weight:bold;font-size:14px');
+  console.log('kabuusumonalisa@gmail.com | +256703953711');
+})();
+</script>
+</body>
+</html>
